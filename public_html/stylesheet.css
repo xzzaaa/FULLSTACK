@@ -1,0 +1,52 @@
+.intro-page {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1vw;
+    width: 5vw;
+    margin-top: 5vw;
+    border-radius: 5px;
+    background-color: black;
+    border: 1px solid black;
+    text-decoration: none;
+    color: white;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1vw;
+    width: 5vw;
+    margin-top: 5vw;
+    border-radius: 5px;
+    background-color: black;
+    border: 1px solid black;
+    text-decoration: none;
+    color: white;
+}
+
+.guestbutton {
+    padding: 5vw;
+    width: 10vw;
+}
+
+a:hover {
+    background-color: rgb(56, 56, 56);
+}
+
+.button:hover {
+    background-color: rgb(56, 56, 56);
+}
+
+.homepagenavbar {
+    margin-top: 2.5vw;
+}

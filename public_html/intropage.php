@@ -1,7 +1,3 @@
-<?php
-include("header.php");
-?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,10 +8,9 @@ include("header.php");
     <title>Document</title>
 </head>
 <body>
-    <div class="homepagenavbar">
-    <a href="index.php" class="button">Home</a>
-    <a href="doomscrollblog.php" class="button">pastblogs</a>
-    <a href="index.php" class="button">Home</a>
-    </div>
+<div class="intro-page">
+    <a href="index.php" class="guestbutton" >View blogs as guest</a>
+    <a href="login.php" class="loginbutton" >Login</a>
+</div>
 </body>
 </html>

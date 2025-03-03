@@ -15,7 +15,7 @@ include("header.php");
     <div class="homepagenavbar">
     <a href="index.php" class="button">Home</a>
     <a href="doomscrollblog.php" class="button">pastblogs</a>
-    <a href="index.php" class="button">Home</a>
+    <a href="login.php" class="button">Login</a>
     </div>
 
     <div class="post-container">

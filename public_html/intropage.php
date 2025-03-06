@@ -9,8 +9,10 @@
 </head>
 <body>
 <div class="intro-page">
-    <a href="index.php" class="guestbutton" >View blogs as guest</a>
-    <a href="login.php" class="loginbutton" >Login</a>
+    <a href="index.php" class="flex-button" >View blogs as guest</a>
+    <a href="login.php" class="flex-button" >Login</a>
 </div>
+
+
 </body>
 </html>

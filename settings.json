@@ -1,0 +1,4 @@
+{
+    "php.executablePath": "C:/xampp/php/php.exe", // Path to your PHP executable
+    "intelephense.environment.phpVersion": "8.0.23" // Replace with your PHP version
+}

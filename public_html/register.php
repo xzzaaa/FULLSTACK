@@ -58,6 +58,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit">Registrera dig</button>
         </form>
 
+
+
+    
+    <h3>Har du redan ett konto?<a href="Login.php">Logga in</a></h3>
     </div>
     </div>
     <p id="response"></p>

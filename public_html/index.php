@@ -2,6 +2,8 @@
 include("header.php");
 ?>
 
+<?php session_start(); ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,9 +16,13 @@ include("header.php");
 <body>
     <div class="homepagenavbar">
     <a href="index.php" class="button">Home</a>
-    <a href="doomscrollblog.php" class="button">pastblogs</a>
-    <a href="login.php" class="button">Login</a>
-    <a href="logout.php" class="button">Log out</a>
+    <a href="doomscrollblog.php" class="button">Past blogs</a>
+    <a href="contact.php" class="button">Contact us</a>
+    <?php if (!isset($_SESSION['user_id'])): ?>
+                <a href="login.php">Login</a></li>
+            <?php else: ?>
+               <a href="logout.php">Logout</a></li>
+            <?php endif; ?>
     </div>
 
     <div class="post-container">

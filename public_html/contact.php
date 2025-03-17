@@ -11,8 +11,7 @@ include("header.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Hämta formulärdata
-    $fname = htmlspecialchars($_POST['fname']);
-    $lname = htmlspecialchars($_POST['lname']);
+    $name = htmlspecialchars($_POST['name']);
     $email = htmlspecialchars($_POST['email']);
     $message = htmlspecialchars($_POST['message']);
 
@@ -29,12 +28,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->Port = 587; // Port för SMTP
 
         // Mottagare
-        $mail->setFrom($email, "$fname $lname");
+        $mail->setFrom($email, "$name");
         $mail->addAddress('telly.lange@elev.ga.lbs.se'); // Ersätt med mottagarens e-post
 
         // Innehåll
         $mail->Subject = 'Kontaktmeddelande';
-        $mail->Body = "Förnamn: $fname\nEfternamn: $lname\nE-post: $email\n\nMeddelande:\n$message";
+        $mail->Body = "Namn: $name\n\nE-post: $email\n\nMeddelande:\n$message";
 
         // Skicka e-post
         $mail->send();
@@ -68,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form method="post" action="">
             <div class="contactContent">
                 <label for="name">Full name:</label><br>
-                <input type="text" id="name" name="name" required><br>
+                <input type="text" id="name" name="fname" required><br>
                 <label for="email">Enter your email:</label><br>
                 <input type="email" id="email" name="email" required><br>
                 <label for="message">Message:</label><br>

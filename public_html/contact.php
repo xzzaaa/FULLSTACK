@@ -67,8 +67,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="contactForm">
         <form method="post" action="">
             <div class="contactContent">
-                <label for="name">Full name:</label><br>
-                <input type="text" id="name" name="name" required><br>
+                <label for="fname">First name:</label><br>
+                <input type="text" id="fname" name="fname" required><br>
+                <label for="lname">Last name:</label><br>
+                <input type="text" id="lname" name="lname" required><br>
                 <label for="email">Enter your email:</label><br>
                 <input type="email" id="email" name="email" required><br>
                 <label for="message">Message:</label><br>

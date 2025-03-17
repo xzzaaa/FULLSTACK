@@ -12,8 +12,8 @@ include '../db_connect.php';
 include("header.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $fname = htmlspecialchars($_POST['fname']);
-    $lname = htmlspecialchars($_POST['lname']);
+    // Hämta formulärdata
+    $name = htmlspecialchars($_POST['name']);
     $email = htmlspecialchars($_POST['email']);
     $message = htmlspecialchars($_POST['message']);
 
@@ -29,15 +29,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; 
         $mail->Port = 587; 
 
-      
-        $mail->setFrom($email, "$fname $lname");
-        $mail->addAddress('telly.lange@elev.ga.lbs.se'); 
+        // Mottagare
+        $mail->setFrom($email, "$name");
+        $mail->addAddress('telly.lange@elev.ga.lbs.se'); // Ersätt med mottagarens e-post
 
-       
+        // Innehåll
         $mail->Subject = 'Kontaktmeddelande';
         $mail->Body = "Förnamn: $fname\nEfternamn: $lname\nE-post: $email\n\nMeddelande:\n$message";
 
-      
+        // Skicka e-post
         $mail->send();
         echo "<p>Meddelandet har skickats!</p>";
     } catch (Exception $e) {
@@ -63,10 +63,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="contactForm">
         <form method="post" action="">
             <div class="contactContent">
-                <label for="fname">First name:</label><br>
-                <input type="text" id="fname" name="fname" required><br>
-                <label for="lname">Last name:</label><br>
-                <input type="text" id="lname" name="lname" required><br>
+                <label for="name">Full name:</label><br>
+                <input type="text" id="name" name="name" required><br>
                 <label for="email">Enter your email:</label><br>
                 <input type="email" id="email" name="email" required><br>
                 <label for="message">Message:</label><br>

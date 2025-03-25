@@ -7,6 +7,8 @@ use PHPMailer\PHPMailer\Exception;
 
 require '../vendor/autoload.php';
 
+include '../db_connect.php';
+
 include("header.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -56,7 +58,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <div class="homepagenavbar">
-        <a href="Login.php" class="button">Login</a>
+    <?php if (!isset($_SESSION['user_id'])): ?>
+                <a href="login.php">Login</a></li>
+            <?php else: ?>
+                
+            <?php endif; ?>
         <a href="doomscrollblog.php" class="button">Past Blogs</a>
         <a href="index.php" class="button">Home</a>
     </div>

@@ -1,8 +1,11 @@
 <?php
 include("header.php");
-?>
+include("../db_connect.php");
 
-<?php session_start(); ?>
+$query = "SELECT title, content, author, created_at FROM blogs ORDER BY created_at DESC LIMIT 1";
+$result = mysqli_query($conn, $query);
+$latest_post = mysqli_fetch_assoc($result);
+?>
 
 
 <!DOCTYPE html>
@@ -21,22 +24,27 @@ include("header.php");
     <?php if (!isset($_SESSION['user_id'])): ?>
                 <a href="login.php">Login</a></li>
             <?php else: ?>
+               <a href="add_blog.php">Add blog</a>
                <a href="logout.php">Logout</a></li>
             <?php endif; ?>
     </div>
 
     <div class="post-container">
-        <h2 class="post-title">Current Post:</h2>
-        <div class="blog-post">
-            <h3 class="post-heading">My First Blog Post</h3>
-            <p class="post-meta">Posted on February 27, 2025</p>
-            <p class="post-content">
-                This is a short preview of the blog post. You can add more details here and format it as needed...
-            </p>
-            <a href="#" class="read-more">Read More</a>
-        </div>
-    </div>
+    <h2 class="post-title">Current Post:</h2>
 
+    <?php if ($latest_post): ?>
+        <div class="blog-post">
+            <h3 class="post-heading"><?php echo htmlspecialchars($latest_post['title']); ?></h3>
+            <p class="post-meta">Posted by <?php echo htmlspecialchars($latest_post['author']); ?> on <?php echo date("F j, Y", strtotime($latest_post['created_at'])); ?></p>
+            <p class="post-content">
+                <?php echo nl2br(htmlspecialchars(substr($latest_post['content'], 0, 150))); ?>...
+            </p>
+            <a href="doomscrollblog.php" class="read-more">Read More</a>
+        </div>
+    <?php else: ?>
+        <p>No blog posts available.</p>
+    <?php endif; ?>
+</div>
 
 </body>
 </html>

@@ -1,5 +1,6 @@
 <?php
-session_start();
+
+include 'header.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: Login.php");
@@ -7,6 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 include '../db_connect.php';
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = $_POST['title'];
@@ -34,10 +36,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <title>Document</title>
 </head>
 <body>
-
-<div class="homepagenavbar">
-    <a href="index.php" class="button">Home</a>
-</div>
 
 <form method="POST">
     <input type="text" name="title" placeholder="Blog Title" required>

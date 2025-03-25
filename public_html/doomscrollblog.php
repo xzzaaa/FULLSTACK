@@ -78,7 +78,7 @@ if (isset($_GET['id'])) {
 
     <?php
 } else {
-    
+
     $query = "SELECT id, title, author, content, created_at FROM blogs ORDER BY created_at DESC";
     $result = $conn->query($query);
     ?>
@@ -93,15 +93,12 @@ if (isset($_GET['id'])) {
     </head>
     <body>
 
-    <div class="homepagenavbar">
-        <a href="index.php" class="button">Home</a>
-    </div>
-
     <h1>Latest Blog Posts</h1>
 
     <?php while ($row = $result->fetch_assoc()): ?>
         <div class="blog-post">
-            <h2><a href="doomscrollblog.php?id=<?php echo $row['id']; ?>"><?php echo htmlspecialchars($row['title']); ?></a></h2>
+         <h2><a href="doomscrollblog.php?id=<?php echo $row['id']; ?>" class="blog-title">
+         <?php echo htmlspecialchars($row['title']); ?></a></h2>
             <p><strong>By:</strong> <?php echo htmlspecialchars($row['author']); ?></p>
             <p><?php echo nl2br(htmlspecialchars(substr($row['content'], 0, 200))); ?>...</p>
             <small>Posted on: <?php echo $row['created_at']; ?></small>

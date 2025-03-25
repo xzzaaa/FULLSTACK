@@ -17,17 +17,7 @@ $latest_post = mysqli_fetch_assoc($result);
     <title>Document</title>
 </head>
 <body>
-    <div class="homepagenavbar">
-    <a href="index.php" class="button">Home</a>
-    <a href="doomscrollblog.php" class="button">Past blogs</a>
-    <a href="contact.php" class="button">Contact us</a>
-    <?php if (!isset($_SESSION['user_id'])): ?>
-                <a href="login.php">Login</a></li>
-            <?php else: ?>
-               <a href="add_blog.php">Add blog</a>
-               <a href="logout.php">Logout</a></li>
-            <?php endif; ?>
-    </div>
+
 
     <div class="post-container">
     <h2 class="post-title">Current Post:</h2>

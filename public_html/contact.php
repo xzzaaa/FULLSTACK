@@ -57,15 +57,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-    <div class="homepagenavbar">
-    <?php if (!isset($_SESSION['user_id'])): ?>
-                <a href="login.php">Login</a></li>
-            <?php else: ?>
-                
-            <?php endif; ?>
-        <a href="doomscrollblog.php" class="button">Past Blogs</a>
-        <a href="index.php" class="button">Home</a>
-    </div>
     <div id="contactHeader">
         <h1>Contact Us:</h1>
     </div>  

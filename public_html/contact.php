@@ -18,26 +18,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $message = htmlspecialchars($_POST['message']);
 
     $mail = new PHPMailer(true);
-    // Skapa e-postmeddelandet
+
     try {
-        // Server settings
+        
         $mail->isSMTP();
-        $mail->Host = 'MS_xKGp2r@trial-k68zxl2j5r94j905.mlsender.net'; // SMTP-server (t.ex. Gmail)
+        $mail->Host = 'MS_xKGp2r@trial-k68zxl2j5r94j905.mlsender.net'; 
         $mail->SMTPAuth = true;
-        $mail->Username = 'lbsuppgift@gmail.com'; // Din e-postadress
-        $mail->Password = 'WebbGrej0+'; // Ditt e-postlösenord
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Kryptering
-        $mail->Port = 587; // Port för SMTP
+        $mail->Username = 'lbsuppgift@gmail.com'; 
+        $mail->Password = 'WebbGrej0+'; 
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; 
+        $mail->Port = 587; 
 
-        // Mottagare
+      
         $mail->setFrom($email, "$fname $lname");
-        $mail->addAddress('telly.lange@elev.ga.lbs.se'); // Ersätt med mottagarens e-post
+        $mail->addAddress('telly.lange@elev.ga.lbs.se'); 
 
-        // Innehåll
+       
         $mail->Subject = 'Kontaktmeddelande';
         $mail->Body = "Förnamn: $fname\nEfternamn: $lname\nE-post: $email\n\nMeddelande:\n$message";
 
-        // Skicka e-post
+      
         $mail->send();
         echo "<p>Meddelandet har skickats!</p>";
     } catch (Exception $e) {

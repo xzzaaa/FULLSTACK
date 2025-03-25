@@ -10,8 +10,8 @@ a.button {
     justify-content: center;
     align-items: center;
     padding: 1vw;
-    width: 5vw;
-    margin-top: 5vw;
+    width: 6vw;
+    margin-top: 0vw;
     border-radius: 5px;
     background-color: black;
     border: 1px solid black;
@@ -141,17 +141,6 @@ a.button:hover {
 }
 
 
-.comment-box {
-    background-color: #f9f9f9;
-    border-left: 4px solid #007bff;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-}
-.comment-box p {
-    margin: 5px 0;
-}
-
 .button {
     display: inline-block;
     padding: 10px 15px;
@@ -176,4 +165,109 @@ a.button:hover {
 .blog-title:hover {
     text-decoration: underline;
     color: #007bff;
+}
+
+
+.comments-section {
+    max-width: 800px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+
+.comment-box {
+    background: #f8f8f8;
+    padding: 12px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    border-left: 4px solid #ddd;
+    transition: 0.3s;
+}
+.comment-box:hover {
+    background: #f1f1f1;
+}
+
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+
+.comment-time {
+    font-size: 12px;
+    color: #777;
+}
+
+
+.comment-content {
+    margin: 8px 0;
+    font-size: 15px;
+    line-height: 1.4;
+    color: #222;
+}
+
+
+.reply-btn {
+    background: #e0e0e0;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 2px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.reply-btn:hover {
+    background: #d0d0d0;
+}
+
+
+.nested-comments {
+    margin-left: 20px;
+    border-left: 2px solid #ddd;
+    padding-left: 10px;
+}
+
+
+.toggle-replies-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px;
+    transition: 0.2s;
+}
+.toggle-replies-btn:hover {
+    transform: scale(1.1);
+}
+
+
+.comment-form {
+    margin-top: 20px;
+}
+.comment-textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    resize: vertical;
+}
+.comment-btn {
+    background: #008CBA;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 2px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.comment-btn:hover {
+    background: #0077A3;
 }

@@ -19,19 +19,19 @@
         <?php endif; ?>
 
         <?php if (!isset($_SESSION['user_id'])): ?>
-            <a href="login.php">Login</a>
+            <a href="login.php" class="button">Login</a>
         <?php else: ?>
             <?php if ($current_page !== 'add_blog.php'): ?>
-                <a href="add_blog.php">Add blog</a>
+                <a href="add_blog.php" class="button">Add blog</a>
             <?php endif; ?>
             
-            <a href="logout.php">Logout</a>
+            <a href="logout.php" class="button">Logout</a>
         <?php endif; ?>
     </div>
 
     <ul>
         <?php if (isset($_SESSION['user_id'])): ?>
-            <li>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</li>
+            <li>hi, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</li>
         <?php endif; ?>
     </ul>
 </nav>

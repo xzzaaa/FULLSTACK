@@ -1,6 +1,14 @@
 <?php
+include '../db_connect.php';
+
+$query = "SELECT * FROM blogs ORDER BY created_at DESC";
+$result = $conn->query($query);
+?>
+
+<?php
 include("header.php");
 ?>
+
 
 
 <!DOCTYPE html>
@@ -12,45 +20,18 @@ include("header.php");
     <title>Document</title>
 </head>
 <body>
-    <div class="homepagenavbar">
-    <a href="index.php" class="button">Home</a>
-    <a href="doomscrollblog.php" class="button">pastblogs</a>
-    <a href="index.php" class="button">Home</a>
-    </div>
 
-    <div class="post-container">
-        <h2 class="post-title">All Posts:</h2>
-        <div class="blog-post">
-            <h3 class="post-heading">My First Blog Post</h3>
-            <p class="post-meta">Posted on February 27, 2025</p>
-            <p class="post-content">
-                This is a short preview of the blog post. You can add more details here and format it as needed...
-            </p>
-            <a href="#" class="read-more">Read More</a>
-        </div>
-    </div>
+<h1>Latest Blog Posts</h1>
 
-    <div class="post-container">
-        <div class="blog-post">
-            <h3 class="post-heading">My First Blog Post</h3>
-            <p class="post-meta">Posted on February 27, 2025</p>
-            <p class="post-content">
-                This is a short preview of the blog post. You can add more details here and format it as needed...
-            </p>
-            <a href="#" class="read-more">Read More</a>
-        </div>
+<?php while ($row = $result->fetch_assoc()): ?>
+    <div class="blog-post">
+        <h2><?php echo htmlspecialchars($row['title']); ?></h2>
+        <p><strong>By:</strong> <?php echo htmlspecialchars($row['author']); ?></p>
+        <p><?php echo nl2br(htmlspecialchars($row['content'])); ?></p>
+        <small>Posted on: <?php echo $row['created_at']; ?></small>
+        <hr>
     </div>
-
-    <div class="post-container">
-        <div class="blog-post">
-            <h3 class="post-heading">My First Blog Post</h3>
-            <p class="post-meta">Posted on February 27, 2025</p>
-            <p class="post-content">
-                This is a short preview of the blog post. You can add more details here and format it as needed...
-            </p>
-            <a href="#" class="read-more">Read More</a>
-        </div>
-    </div>
+<?php endwhile; ?>
 
 </body>
 </html>

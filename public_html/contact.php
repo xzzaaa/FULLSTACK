@@ -5,12 +5,11 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-require '../vendor/autoload.php'; // Include Composer's autoloader
+require '../vendor/autoload.php';
 
 include("header.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Hämta formulärdata
     $fname = htmlspecialchars($_POST['fname']);
     $lname = htmlspecialchars($_POST['lname']);
     $email = htmlspecialchars($_POST['email']);

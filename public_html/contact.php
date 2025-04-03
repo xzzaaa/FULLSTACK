@@ -35,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->Subject = 'Kontaktmeddelande';
         $mail->Body = "Namn: $name\n\nE-post: $email\n\nMeddelande:\n$message";
 
-        // Skicka e-post
+        // Skicka e-post 
         $mail->send();
         echo "<p>Meddelandet har skickats!</p>";
     } catch (Exception $e) {
@@ -85,3 +85,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <?php
 include("footer.php");
 ?>
+
+
+<!--! https://app.mailersend.com/domains/86org8e5rk0gew13

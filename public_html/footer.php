@@ -19,6 +19,6 @@
     </div>
     </div>
     <div class="copyright">
-    Ⓒ2025 KingBlog Inc., The King
+    Ⓒ2025 KingBlog Inc., The King!
   </div>
   </footer>

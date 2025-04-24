@@ -5,7 +5,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-require '../vendor/autoload.php'; // Include Composer's autoloader
+require '../vendor/autoload.php';
 
 include("header.php");
 
@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $mail = new PHPMailer(true);
     // Skapa e-postmeddelandet
     try {
-        // Server settings
+        // Server inställningar
         $mail->isSMTP();
         $mail->Host = 'MS_xKGp2r@trial-k68zxl2j5r94j905.mlsender.net'; // SMTP-server (t.ex. Gmail)
         $mail->SMTPAuth = true;

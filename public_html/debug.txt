@@ -1,0 +1,13 @@
+Metod: POST
+Data: Array
+(
+    [comment_id] => 2
+    [vote] => 1
+)
+
+Session: Array
+(
+    [user_id] => 2
+    [user_name] => Bodhi
+    [username] => 
+)

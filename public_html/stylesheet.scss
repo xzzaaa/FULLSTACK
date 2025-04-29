@@ -1,0 +1,742 @@
+// --- stylesheet.scss (Compact Blog Style) ---
+
+// --- Variables ---
+// Colors
+$color-text: #333333;
+$color-text-light: #555555;
+$color-text-muted: #777777;
+$color-background: #ffffff;
+$color-background-alt: #f8f8f8; // Slightly off-white for subtle separation
+$color-border: #dddddd;
+$color-primary: #007bff; // Standard link blue
+$color-accent: #6c757d; // Muted accent (e.g., for buttons)
+$color-success: #28a745;
+$color-danger: #dc3545;
+
+// Fonts
+$font-primary: Arial, Helvetica, sans-serif; // Classic sans-serif
+$font-headings: Georgia, Times, 'Times New Roman', serif; // Serif for headings
+
+// Spacing & Sizes
+$spacing-unit-base: 1rem; // ~16px
+$spacing-unit-sm: $spacing-unit-base * 0.5;  // ~8px
+$spacing-unit-md: $spacing-unit-base * 1;    // ~16px
+$spacing-unit-lg: $spacing-unit-base * 1.5;  // ~24px
+$content-max-width: 760px; // Typical blog content width
+$border-radius: 3px; // Subtle rounding
+
+// Transitions (less emphasis)
+$transition-speed: 0.2s;
+$transition-ease: ease-in-out;
+
+// --- Base & Reset ---
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: $font-primary;
+  background-color: $color-background;
+  color: $color-text;
+  line-height: 1.6;
+  font-size: 15px; // Slightly smaller base for compactness
+  padding-top: 60px; // Add space below fixed nav
+}
+
+// --- Layout ---
+.main-content, // Apply this class around your main page content (post list, single post)
+.post-container,
+.form-container,
+.contactForm,
+.intro-page {
+  max-width: $content-max-width;
+  margin: $spacing-unit-lg auto;
+  padding: 0 $spacing-unit-md;
+}
+
+// --- Typography ---
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-headings;
+  color: darken($color-text, 10%);
+  margin-bottom: $spacing-unit-md;
+  line-height: 1.3;
+}
+
+h1 { font-size: 2rem; margin-top: $spacing-unit-lg; } // Top-level page title
+h2 { font-size: 1.7rem; } // Post titles
+h3 { font-size: 1.4rem; } // Section titles (like Comments, Add Comment)
+h4 { font-size: 1.2rem; }
+
+p {
+  margin-bottom: $spacing-unit-md;
+  color: $color-text-light;
+}
+
+a {
+  color: $color-primary;
+  text-decoration: none;
+  transition: color $transition-speed $transition-ease;
+
+  &:hover {
+    color: darken($color-primary, 15%);
+    text-decoration: underline;
+  }
+}
+
+small, .post-meta, .comment-time {
+  font-size: 0.85em;
+  color: $color-text-muted;
+  display: block; // Ensure it takes its own line/space
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid $color-border;
+  margin: $spacing-unit-lg 0;
+}
+
+// --- stylesheet.scss (Additions/Modifications) ---
+
+// Find the existing img style or add this block if none exists specifically for blog images
+img {
+  max-width: 100%; // Good default for all images
+  height: auto;    // Maintain aspect ratio
+  vertical-align: middle; // Good practice for inline/inline-block alignment issues
+}
+
+// Add this new class specifically for blog post images
+.blog-post-image {
+  display: block; // Make it a block element for easier margin control
+  max-width: 100%; // Ensure it's responsive and doesn't overflow parent
+  height: auto;    // Maintain aspect ratio
+  margin-top: $spacing-unit-md;      // Use your defined spacing variables
+  margin-bottom: $spacing-unit-md;
+  border-radius: $border-radius;     // Use your defined border radius variable
+  // Remove any conflicting inline styles from the PHP if they existed previously
+}
+
+// --- Control Image Size in Different Contexts ---
+
+// Style for images within the LIST VIEW (.blog-post)
+.blog-post {
+  .blog-post-image {
+    // Make images in the list view significantly smaller
+    max-width: 300px; // Example: Limit width to 300px
+    // Or use a percentage if you prefer:
+    // max-width: 40%;
+    margin-left: auto;  // Center the image if it's narrower than the container
+    margin-right: auto; // Center the image
+  }
+}
+
+// Style for images within the SINGLE POST VIEW (.blog-post-full)
+.blog-post-full { // The <article> tag on the single post page
+  .blog-post-image {
+    // Images on the single post page can be larger, but maybe not full-width
+    max-width: 75%;   // Example: Allow up to 75% of the content width
+    margin-left: auto;  // Center it
+    margin-right: auto; // Center it
+  }
+}
+
+// --- Add style for the new read-more-link ---
+a.read-more-link {
+    display: inline-block; // Or block if you want it on its own line
+    margin-top: $spacing-unit-sm;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: $color-primary; // Use your primary link color
+
+    &:hover {
+        color: darken($color-primary, 10%);
+        text-decoration: underline;
+    }
+}
+
+// --- Add style for reply status and cancel button (Optional but nice) ---
+.reply-status {
+    background-color: lighten($color-primary, 45%);
+    border: 1px solid lighten($color-primary, 35%);
+    padding: $spacing-unit-sm $spacing-unit-md;
+    margin-bottom: $spacing-unit-md;
+    font-size: 0.9em;
+    border-radius: $border-radius;
+
+    strong { color: darken($color-primary, 10%); }
+
+    button.cancel-reply-btn { // Style the cancel button
+        background: none;
+        border: none;
+        color: $color-danger;
+        text-decoration: underline;
+        font-size: 0.9em;
+        padding: 0 0 0 $spacing-unit-sm;
+        cursor: pointer;
+        &:hover { color: darken($color-danger, 10%); }
+    }
+}
+
+// --- Style for login prompt ---
+.login-prompt {
+    text-align: center;
+    color: $color-text-muted;
+    margin-top: $spacing-unit-lg;
+    a { margin: 0 $spacing-unit-sm * 0.5; }
+}
+
+// --- Style for screen-reader only label ---
+.sr-only {
+	border: 0 !important;
+	clip: rect(1px, 1px, 1px, 1px) !important; /* 1 */
+	-webkit-clip-path: inset(50%) !important;
+		clip-path: inset(50%) !important;  /* 2 */
+	height: 1px !important;
+	margin: -1px !important;
+	overflow: hidden !important;
+	padding: 0 !important;
+	position: absolute !important;
+	width: 1px !important;
+	white-space: nowrap !important; /* 3 */
+}
+
+// --- Navigation ---
+nav {
+  background-color: darken($color-background-alt, 2%);
+  padding: $spacing-unit-sm 0;
+  border-bottom: 1px solid $color-border;
+  position: fixed; // Fixed navigation bar
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+
+  .homepagenavbar {
+    max-width: $content-max-width + 100px; // Allow nav to be slightly wider
+    margin: 0 auto;
+    display: flex;
+    justify-content: center; // Center nav items
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $spacing-unit-md;
+    padding: $spacing-unit-sm $spacing-unit-md;
+
+    a.button { // Style nav links as subtle buttons or just links
+      background-color: transparent;
+      color: $color-text-light;
+      padding: $spacing-unit-sm $spacing-unit-md * 0.75;
+      border: 1px solid transparent; // Keep space, no visible border
+      border-radius: $border-radius;
+      text-decoration: none;
+      font-weight: normal; // Less emphasis than primary buttons
+      font-size: 0.9em;
+      transition: background-color $transition-speed $transition-ease, color $transition-speed $transition-ease;
+
+      &:hover {
+        background-color: darken($color-background-alt, 5%);
+        color: $color-text;
+        text-decoration: none;
+      }
+      // Indicate active page if possible (requires PHP adding class)
+      &.active {
+          font-weight: bold;
+          color: $color-primary;
+          background-color: lighten($color-primary, 45%);
+      }
+    }
+  }
+
+  ul { // User greeting - positioned to the right typically
+    list-style: none;
+    position: absolute; // Position relative to nav
+    right: $spacing-unit-md;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 0;
+    margin: 0;
+
+    li {
+      font-size: 0.9em;
+      color: $color-text-muted;
+      font-weight: bold;
+    }
+  }
+}
+
+// --- Intro Page ---
+.intro-page {
+  text-align: center;
+  padding-top: $spacing-unit-lg * 2;
+  padding-bottom: $spacing-unit-lg * 2;
+
+  a.flex-button { // Reusing this class name
+      display: inline-block;
+      background-color: $color-accent;
+      color: $color-background;
+      padding: $spacing-unit-md $spacing-unit-lg;
+      margin: $spacing-unit-sm;
+      border-radius: $border-radius;
+      text-decoration: none;
+      font-weight: bold;
+      min-width: 180px;
+      transition: background-color $transition-speed $transition-ease;
+
+      &:hover {
+          background-color: darken($color-accent, 10%);
+          text-decoration: none;
+      }
+  }
+}
+
+// --- Blog Post List & Single Post Preview ---
+.post-container { // Container for latest post preview on index
+    background-color: $color-background-alt;
+    border: 1px solid $color-border;
+    padding: $spacing-unit-lg;
+    border-radius: $border-radius;
+    margin-bottom: $spacing-unit-lg;
+
+    .post-title { // Title like "Current Post:"
+        margin-bottom: $spacing-unit-md;
+        font-size: 1.2em;
+        color: $color-text-muted;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+}
+
+.blog-post { // Applied to each post in a list AND the preview
+  margin-bottom: $spacing-unit-lg * 1.5;
+  padding-bottom: $spacing-unit-lg * 1.5;
+  border-bottom: 1px solid $color-border;
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  h2 { // Post title in list view
+    margin-bottom: $spacing-unit-sm;
+    a.blog-title {
+      color: $color-text;
+      &:hover {
+        color: $color-primary;
+        text-decoration: none;
+      }
+    }
+  }
+
+   h3.post-heading { // Post title in preview box
+        margin-bottom: $spacing-unit-sm;
+        font-size: 1.5rem; // Make preview title prominent
+        color: $color-text;
+   }
+
+
+  p {
+    margin-bottom: $spacing-unit-md * 0.75; // Tighter paragraph spacing
+  }
+
+  // Meta info (By: Author | Date)
+  p > strong { // Styling for "By:"
+      color: $color-text; // Make 'By' stand out slightly
+  }
+  small { // Date on list view, or full meta line in preview
+      margin-top: $spacing-unit-sm;
+  }
+  .post-meta { // Specific meta line in preview
+      margin-bottom: $spacing-unit-md;
+  }
+
+  .post-content { // Used in preview box
+      color: $color-text-light;
+  }
+
+  .read-more { // Button in preview box
+    display: inline-block;
+    background-color: $color-accent;
+    color: $color-background;
+    padding: $spacing-unit-sm $spacing-unit-md;
+    border-radius: $border-radius;
+    text-decoration: none;
+    font-size: 0.9em;
+    margin-top: $spacing-unit-sm;
+    transition: background-color $transition-speed $transition-ease;
+
+    &:hover {
+      background-color: darken($color-accent, 10%);
+      text-decoration: none;
+    }
+  }
+}
+
+// --- Single Blog Post Page ---
+// Uses base h2, p, small, hr, img styles defined earlier.
+// Container handled by .main-content
+
+// --- Comments Section ---
+.comments-section {
+  margin-top: $spacing-unit-lg * 2;
+  border-top: 2px solid $color-border; // Stronger separator
+  padding-top: $spacing-unit-lg;
+
+  h3 { // "Comments" title
+    margin-bottom: $spacing-unit-lg;
+  }
+
+  .comment-box {
+    background: lighten($color-background-alt, 2%); // Very subtle background
+    border: 1px solid $color-border;
+    padding: $spacing-unit-md;
+    margin-bottom: $spacing-unit-md;
+    border-radius: $border-radius;
+    position: relative; // For potential absolute elements later if needed
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: $spacing-unit-sm;
+      font-size: 0.9em;
+
+      .comment-username { // Changed class name from PHP
+        font-weight: bold;
+        color: $color-text;
+        margin-right: $spacing-unit-sm;
+      }
+      // .comment-time uses base styles
+    }
+
+    .comment-content {
+      font-size: 0.95em;
+      color: $color-text-light;
+      margin-bottom: $spacing-unit-md;
+      word-wrap: break-word;
+      white-space: pre-wrap; // Respect newlines from nl2br
+    }
+
+    .comment-actions { // Wrapper for votes and reply
+        display: flex;
+        align-items: center;
+        gap: $spacing-unit-md;
+        flex-wrap: wrap; // Allow wrapping on small screens
+    }
+
+    .vote-section { // Vote controls block
+        display: inline-flex;
+        align-items: center;
+        gap: $spacing-unit-sm * 0.5; // Very tight gap
+
+        .vote-btn {
+            background: none;
+            border: 1px solid $color-border;
+            color: $color-text-muted;
+            padding: 2px 6px; // Compact buttons
+            border-radius: $border-radius;
+            cursor: pointer;
+            font-size: 0.9em;
+            line-height: 1;
+            transition: background-color $transition-speed $transition-ease, border-color $transition-speed $transition-ease, color $transition-speed $transition-ease;
+
+            &:hover { background: darken($color-background-alt, 5%); }
+
+            &[data-vote-type="1"]:hover { // Upvote
+                border-color: $color-success;
+                color: $color-success;
+            }
+            &[data-vote-type="-1"]:hover { // Downvote
+                border-color: $color-danger;
+                color: $color-danger;
+            }
+        }
+        span { // Vote counts
+            font-size: 0.85em;
+            min-width: 15px; // Prevent jumpiness
+            text-align: center;
+            color: $color-text-muted;
+            padding: 0 2px; // Minimal padding
+        }
+        #upvotes- { /* Can add specific color later if needed */ }
+        #downvotes- { /* Can add specific color later if needed */ }
+    }
+
+
+    .reply-btn { // Reply button
+      background-color: darken($color-background-alt, 5%);
+      border: 1px solid $color-border;
+      color: $color-text-light;
+      padding: 3px 10px;
+      border-radius: $border-radius;
+      text-decoration: none;
+      font-size: 0.85em;
+      cursor: pointer;
+      transition: background-color $transition-speed $transition-ease, border-color $transition-speed $transition-ease;
+
+      &:hover {
+        background-color: darken($color-background-alt, 10%);
+        border-color: darken($color-border, 10%);
+        text-decoration: none;
+        color: $color-text;
+      }
+    }
+
+    // Nested/Replied Comments
+    .nested-comments {
+      // margin-left is handled by inline style in PHP - keep that for depth
+      border-left: 2px solid $color-border;
+      padding-left: $spacing-unit-md;
+      margin-top: $spacing-unit-md;
+      // Remove the background/border from the parent .comment-box if it's just a container
+      & > .comment-box {
+          // Style replies slightly differently if desired
+          background: lighten($color-background, 2%); // e.g. pure white for replies
+      }
+    }
+     .replies { // Container for fetched replies (initially hidden)
+        // margin-left/padding-left/border-left will be handled by nested .comment-box structure or .nested-comments
+        // display: none; is handled by inline style
+     }
+  }
+}
+
+// --- Comment Form ---
+.comment-form {
+  margin-top: $spacing-unit-lg;
+  border-top: 1px solid $color-border;
+  padding-top: $spacing-unit-lg;
+
+  h3 { // "Add a Comment" title
+    margin-bottom: $spacing-unit-md;
+  }
+
+  textarea.comment-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: $spacing-unit-sm $spacing-unit-md;
+    border: 1px solid $color-border;
+    border-radius: $border-radius;
+    font-size: 0.95em;
+    font-family: $font-primary;
+    resize: vertical;
+    margin-bottom: $spacing-unit-md;
+    transition: border-color $transition-speed $transition-ease;
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary;
+    }
+  }
+
+  .comment-btn { // Post comment button
+    background-color: $color-primary;
+    color: $color-background;
+    padding: $spacing-unit-sm $spacing-unit-lg;
+    border: none;
+    border-radius: $border-radius;
+    font-size: 0.95em;
+    cursor: pointer;
+    transition: background-color $transition-speed $transition-ease;
+
+    &:hover {
+      background-color: darken($color-primary, 10%);
+    }
+  }
+}
+
+// --- General Forms (Login, Register, Contact) ---
+.form-container { // Wrapper div for login/register page content
+    // Uses .main-content styles
+}
+
+.login-container, // Specific div on login page
+.contactForm form { // The <form> itself on contact page
+    background: $color-background-alt;
+    border: 1px solid $color-border;
+    padding: $spacing-unit-lg;
+    border-radius: $border-radius;
+
+    h1, h2 { // Form Titles (Login, Contact Us)
+        text-align: center;
+        margin-bottom: $spacing-unit-lg;
+        margin-top: 0; // Reset top margin if it's the first element
+    }
+
+    label {
+        display: block;
+        margin-bottom: $spacing-unit-sm * 0.5;
+        font-weight: bold;
+        font-size: 0.9em;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    textarea {
+        width: 100%;
+        padding: $spacing-unit-sm $spacing-unit-md;
+        border: 1px solid $color-border;
+        border-radius: $border-radius;
+        font-size: 0.95em;
+        margin-bottom: $spacing-unit-md;
+        transition: border-color $transition-speed $transition-ease;
+
+        &:focus {
+            outline: none;
+            border-color: $color-primary;
+        }
+    }
+
+    textarea { // Specific to contact form
+        min-height: 120px;
+        resize: vertical;
+        font-family: $font-primary; // Ensure consistent font
+    }
+
+    button, // Login button
+    input[type="submit"] { // Contact submit
+        display: block; // Make buttons full width easily
+        width: 100%;
+        background-color: $color-primary;
+        color: $color-background;
+        padding: $spacing-unit-md * 0.75 $spacing-unit-lg;
+        border: none;
+        border-radius: $border-radius;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: center;
+        transition: background-color $transition-speed $transition-ease;
+        margin-top: $spacing-unit-sm; // Space above button
+
+        &:hover {
+            background-color: darken($color-primary, 10%);
+        }
+    }
+
+    #submitButton { // Wrapper div for contact submit - remove extra styles
+        margin-top: $spacing-unit-sm;
+        input[type="submit"] {
+            margin-top: 0; // Reset margin if needed
+            background-color: $color-accent; // Different color for contact submit?
+             &:hover { background-color: darken($color-accent, 10%); }
+        }
+    }
+
+    #response { // Login feedback message
+        margin-top: $spacing-unit-md;
+        text-align: center;
+        font-weight: normal;
+        padding: $spacing-unit-sm $spacing-unit-md;
+        border-radius: $border-radius;
+        font-size: 0.9em;
+        border: 1px solid transparent;
+
+        // Add classes .success or .error via JS
+        &.success {
+            background-color: lighten($color-success, 45%);
+            color: darken($color-success, 15%);
+            border-color: lighten($color-success, 30%);
+        }
+        &.error {
+           background-color: lighten($color-danger, 40%);
+           color: darken($color-danger, 15%);
+           border-color: lighten($color-danger, 30%);
+        }
+    }
+
+    // Links below form (e.g., "Need an account?") - Assuming similar structure
+    .form-footer-links {
+      margin-top: $spacing-unit-lg;
+      text-align: center;
+      font-size: 0.9em;
+    }
+}
+
+// Contact page specific header
+#contactHeader {
+  text-align: center;
+  margin-bottom: $spacing-unit-lg;
+  h1 {
+    color: $color-text; // Standard heading color
+  }
+}
+
+
+// --- Footer ---
+footer {
+  text-align: center;
+  padding: $spacing-unit-lg * 1.5 $spacing-unit-md;
+  margin-top: $spacing-unit-lg * 2;
+  background-color: darken($color-background-alt, 3%);
+  border-top: 1px solid $color-border;
+  font-size: 0.9em;
+  color: $color-text-muted;
+
+  // Simple structure assumed from HTML
+  .footercontainer2, .socials, .label {
+      margin-bottom: $spacing-unit-lg;
+      h3 {
+          font-family: $font-primary; // Use primary font for footer headings
+          font-size: 1em;
+          color: $color-text-light;
+          margin-bottom: $spacing-unit-sm;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+      }
+      p, a {
+          color: $color-text-muted;
+          font-size: 0.95em;
+          line-height: 1.5;
+      }
+      a:hover {
+          color: $color-primary;
+      }
+  }
+
+  .socials a { // Basic styling for font-awesome links
+      margin: 0 $spacing-unit-sm * 0.5;
+      font-size: 1.3em; // Make icons slightly larger
+  }
+
+  .copyright {
+    margin-top: $spacing-unit-lg;
+    font-size: 0.85em;
+  }
+}
+
+// --- Media Queries (Basic Example) ---
+@media (max-width: 768px) {
+  body {
+      font-size: 14px; // Slightly smaller on mobile
+      padding-top: 50px; // Adjust for potentially smaller nav
+  }
+
+  .main-content, .post-container, .form-container, .contactForm, .intro-page {
+      padding: 0 $spacing-unit-sm; // Less horizontal padding
+  }
+
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
+
+  nav {
+      .homepagenavbar {
+          gap: $spacing-unit-sm; // Tighter nav items
+          justify-content: space-around; // Spread out a bit
+          padding: $spacing-unit-sm * 0.5 $spacing-unit-sm;
+          a.button { padding: $spacing-unit-sm * 0.75 $spacing-unit-sm; font-size: 0.85em;}
+      }
+      ul { // Hide or simplify user greeting on small screens
+          display: none; // Simplest approach
+      }
+  }
+
+   footer {
+     // Could stack footer columns here if using flexbox/grid
+   }
+}

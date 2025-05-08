@@ -36,9 +36,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->Body = "Namn: $name\nE-post: $email\n\nMeddelande:\n$message";
 
         $mail->send();
-        echo "<script>showToast('Your message has been sent!');</script>";
+        echo "<script>window.onload = function () {
+                showToast('Your message has been sent!');};</script>";
     } catch (Exception $e) {
-        echo "<script>showToast('Something went wrong. Try again later. Error message: {$mail->ErrorInfo}');</script>";
+        echo "<script>window.onload = function () {
+                showToast('Something went wrong. Try again later. Error message: {$mail->ErrorInfo}');};</script>";
     }
 }
 ?>
@@ -54,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-
+    
     <div id="contactHeader">
         <h1>Contact Us:</h1>
     </div>

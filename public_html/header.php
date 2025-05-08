@@ -1,13 +1,11 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) { 
-    session_start();                     
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
 }
 
-    $current_page = basename($_SERVER['PHP_SELF']); 
+$current_page = basename($_SERVER['PHP_SELF']);
 ?>
-
 <link rel="stylesheet" href="stylesheet.css">
-
 
 <nav>
     <div class="homepagenavbar">
@@ -24,7 +22,10 @@ if (session_status() == PHP_SESSION_NONE) {
         <?php endif; ?>
 
         <?php if (!isset($_SESSION['user_id'])): ?>
-            <a href="login.php" class="button">Login</a>
+            <?php
+                  if ($current_page !== 'login.php') : ?>
+                <a href="login.php" class="button">Login</a>
+            <?php endif; ?>
         <?php else: ?>
             <?php if ($current_page !== 'add_blog.php'): ?>
                 <a href="add_blog.php" class="button">Add blog</a>
@@ -35,8 +36,8 @@ if (session_status() == PHP_SESSION_NONE) {
     </div>
 
     <ul>
-        <?php if (isset($_SESSION['user_id'])): ?>
-            <li>hi, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</li>
+        <?php if (isset($_SESSION['user_id']) && isset($_SESSION['user_name'])): ?>
+            <li>Hi, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</li>
         <?php endif; ?>
     </ul>
 </nav>

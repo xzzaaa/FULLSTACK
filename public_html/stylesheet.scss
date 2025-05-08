@@ -709,3 +709,21 @@ footer {
 .post-actions span {
   margin-right: 5px;
 }
+
+.comment-actions {
+  .toggle-replies-btn {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    color: #333;
+    padding: 3px 10px;
+    border-radius: $border-radius;
+    font-size: 0.85em; 
+    cursor: pointer;
+    margin-left: $spacing-unit-sm; 
+    transition: background-color $transition-speed $transition-ease;
+
+    &:hover {
+      background-color: darken(#f0f0f0, 10%);
+    }
+  }
+}

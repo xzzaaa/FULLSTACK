@@ -3,6 +3,7 @@ session_start();
 include("../db_connect.php"); 
 
 function fetch_comments($conn, $blog_id, $parent_id = NULL, $depth = 0) {
+    // --- Your existing query to fetch current level comments ---
     $query = "SELECT comments.id, comments.comment, users.username, comments.created_at,
                      COALESCE(SUM(CASE WHEN comment_votes.vote = 1 THEN 1 ELSE 0 END), 0) as upvotes,
                      COALESCE(SUM(CASE WHEN comment_votes.vote = -1 THEN 1 ELSE 0 END), 0) as downvotes
@@ -12,28 +13,70 @@ function fetch_comments($conn, $blog_id, $parent_id = NULL, $depth = 0) {
               WHERE comments.blog_id = ? AND comments.parent_comment_id " .
               ($parent_id === NULL ? "IS NULL" : "= ?") .
               " GROUP BY comments.id
-              ORDER BY comments.created_at DESC";
+              ORDER BY comments.created_at DESC"; // Or ASC
 
     $stmt = $conn->prepare($query);
     if ($stmt === false) { error_log("Prepare failed (fetch_comments): " . $conn->error); return; }
     if ($parent_id === NULL) { $stmt->bind_param("i", $blog_id); } else { $stmt->bind_param("ii", $blog_id, $parent_id); }
     if (!$stmt->execute()) { error_log("Execute failed (fetch_comments): " . $stmt->error); $stmt->close(); return; }
+
     $result = $stmt->get_result();
+
     if ($result->num_rows > 0) {
         $container_class = ($depth > 0) ? 'nested-comments' : '';
         echo '<div class="'.$container_class.'" id="comment-thread-'.($parent_id ?? 'root').'" '.($depth > 0 ? 'style="margin-left: '.($depth * 20).'px;"' : '').'>';
+
         while ($comment = $result->fetch_assoc()) {
             $comment_id = $comment['id'];
+
+            $has_replies = false;
+            if ($depth < 5) { 
+                $queryCheckReplies = "SELECT COUNT(id) as reply_count FROM comments WHERE parent_comment_id = ?";
+                $stmtCheckReplies = $conn->prepare($queryCheckReplies);
+                if ($stmtCheckReplies) {
+                    $stmtCheckReplies->bind_param("i", $comment_id);
+                    $stmtCheckReplies->execute();
+                    $resultCheckReplies = $stmtCheckReplies->get_result();
+                    if ($rowCheck = $resultCheckReplies->fetch_assoc()) {
+                        if ($rowCheck['reply_count'] > 0) {
+                            $has_replies = true;
+                        }
+                    }
+                    $stmtCheckReplies->close();
+                } else {
+                    error_log("Prepare failed (check replies): " . $conn->error);
+                }
+            }
+
             echo '<div class="comment-box" id="comment-'.$comment_id.'">';
             echo '<div class="comment-header"><span class="comment-username">'.htmlspecialchars($comment['username']).'</span><span class="comment-time">'.date("F j, Y, g:i a", strtotime($comment['created_at'])).'</span></div>';
             echo '<p class="comment-content">'.nl2br(htmlspecialchars($comment['comment'])).'</p>';
-            echo '<div class="comment-actions"><div class="vote-section"><button class="vote-btn" data-comment-id="'.$comment_id.'" data-vote-type="1" aria-label="Upvote">▲</button><span id="upvotes-'.$comment_id.'">'.($comment['upvotes'] ?? 0).'</span><button class="vote-btn" data-comment-id="'.$comment_id.'" data-vote-type="-1" aria-label="Downvote">▼</button><span id="downvotes-'.$comment_id.'">'.($comment['downvotes'] ?? 0).'</span></div>';
-            if (isset($_SESSION['user_id'])) { echo '<button class="reply-btn" onclick="setReply('.$comment_id.')">Reply</button>'; }
-            if ($depth < 5) { echo '<button class="toggle-replies-btn" onclick="toggleReplies('.$comment_id.')">▶ Show Replies</button>'; }
+            
+            echo '<div class="comment-actions">';
+                
+                echo '<div class="vote-section">';
+                echo '<button class="vote-btn" data-comment-id="'.$comment_id.'" data-vote-type="1" aria-label="Upvote">▲</button>';
+                echo '<span id="upvotes-'.$comment_id.'">'.($comment['upvotes'] ?? 0).'</span>';
+                echo '<button class="vote-btn" data-comment-id="'.$comment_id.'" data-vote-type="-1" aria-label="Downvote">▼</button>';
+                echo '<span id="downvotes-'.$comment_id.'">'.($comment['downvotes'] ?? 0).'</span>';
+                echo '</div>'; 
+
+                if (isset($_SESSION['user_id'])) {
+                    echo '<button class="reply-btn" onclick="setReply('.$comment_id.')">Reply</button>';
+                }
+
+                if ($has_replies) {
+                    echo '<button class="toggle-replies-btn" onclick="toggleReplies('.$comment_id.')">▶ Show Replies</button>';
+                }
+
             echo '</div>';
+
             echo '<div class="nested-comments replies" id="replies-'.$comment_id.'" style="display: none;">';
-            fetch_comments($conn, $blog_id, $comment_id, $depth + 1);
-            echo '</div></div>';
+            if ($depth < 5) {
+                 fetch_comments($conn, $blog_id, $comment_id, $depth + 1);
+            }
+            echo '</div>'; 
+            echo '</div>';
         }
         echo '</div>';
     }

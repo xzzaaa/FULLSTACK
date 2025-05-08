@@ -19,28 +19,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $mail = new PHPMailer(true);
 
     try {
-        
+
         $mail->isSMTP();
-        $mail->Host = 'MS_xKGp2r@trial-k68zxl2j5r94j905.mlsender.net'; 
+        $mail->Host = 'pro.turbo-smtp.com';
         $mail->SMTPAuth = true;
-        $mail->Username = 'lbsuppgift@gmail.com'; 
-        $mail->Password = 'WebbGrej0+'; 
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; 
-        $mail->Port = 587; 
+        $mail->Username = 'lbsuppgift@gmail.com';
+        $mail->Password = 'WebbGrej0+';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
 
-        // Mottagare
-        $mail->setFrom($email, "$name");
-        $mail->addAddress('telly.lange@elev.ga.lbs.se'); // Ersätt med mottagarens e-post
+        $mail->setFrom('lbsuppgift@gmail.com', $name);
+        $mail->addReplyTo($email, $name);
+        $mail->addAddress('telly.lange@elev.ga.lbs.se');
 
-        // Innehåll
         $mail->Subject = 'Kontaktmeddelande';
-        $mail->Body = "Förnamn: $fname\nEfternamn: $lname\nE-post: $email\n\nMeddelande:\n$message";
+        $mail->Body = "Namn: $name\nE-post: $email\n\nMeddelande:\n$message";
 
-        // Skicka e-post
         $mail->send();
-        echo "<p>Meddelandet har skickats!</p>";
+        echo "<script>showToast('Your message has been sent!');</script>";
     } catch (Exception $e) {
-        echo "<p>Något gick fel. Försök igen senare. Felmeddelande: {$mail->ErrorInfo}</p>";
+        echo "<script>showToast('Something went wrong. Try again later. Error message: {$mail->ErrorInfo}');</script>";
     }
 }
 ?>
@@ -56,9 +54,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
+
     <div id="contactHeader">
         <h1>Contact Us:</h1>
-    </div>  
+    </div>
     <div class="contactForm">
         <form method="post" action="">
             <div class="contactContent">
@@ -74,6 +73,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </form>
     </div>
+
+    <div id="toast"></div>
+
+    <script>
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.style.display = "block";
+            toast.style.opacity = 1;
+
+            setTimeout(() => {
+                toast.style.opacity = 0;
+                setTimeout(() => {
+                    toast.style.display = "none";
+                }, 500);
+            }, 3000);
+        }
+    </script>
+
 </body>
 
 </html>

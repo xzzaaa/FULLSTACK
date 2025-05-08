@@ -1,34 +1,29 @@
 <?php
-include 'header.php'; // Start session first
+include 'header.php';
 
-// Check login status
 if (!isset($_SESSION['user_id'])) {
     header("Location: Login.php");
     exit();
 }
 
-include '../db_connect.php'; // Include DB connection
+include '../db_connect.php';
 
 $errorMessage = null;
 $successMessage = null;
-$title = ''; // Initialize variables to retain form data on error
+$title = '';
 $content = '';
 
-// --- PHP Logic for handling POST request ---
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $title = trim($_POST['title'] ?? ''); // Use trim and null coalesce
+    $title = trim($_POST['title'] ?? '');
     $content = trim($_POST['content'] ?? '');
-    $author = $_SESSION['user_name']; // Get author from session
+    $author = $_SESSION['user_name'];
 
-    // Basic validation
     if (empty($title) || empty($content)) {
         $errorMessage = "Title and content are required.";
     } else {
-        // --- Start Transaction ---
         $conn->begin_transaction();
 
         try {
-            // 1. Insert the main blog post (without image reference)
             $queryBlog = "INSERT INTO blogs (title, content, author, created_at) VALUES (?, ?, ?, NOW())";
             $stmtBlog = $conn->prepare($queryBlog);
             if (!$stmtBlog) {
@@ -40,12 +35,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                  throw new Exception("Blog execute failed: " . $stmtBlog->error);
             }
 
-            $newBlogId = $conn->insert_id; // Get the ID of the newly inserted blog post
+            $newBlogId = $conn->insert_id;
             $stmtBlog->close();
 
-            // 2. Handle Multiple Image Uploads
-            $imageUploadSuccess = true; // Flag to track if all images processed ok
-            if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) { // Check if files were selected
+            if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
 
                 $uploadDir = 'uploads/';
                 if (!is_dir($uploadDir)) {
@@ -55,7 +48,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 $imageCount = count($_FILES['images']['name']);
 
-                // Prepare statement for image insertion (reuse inside loop)
                 $queryImage = "INSERT INTO blog_images (blog_id, image_filename) VALUES (?, ?)";
                 $stmtImage = $conn->prepare($queryImage);
                  if (!$stmtImage) {
@@ -63,24 +55,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                  }
 
                 for ($i = 0; $i < $imageCount; $i++) {
-                    // Check for individual file upload errors
                     if ($_FILES['images']['error'][$i] === UPLOAD_ERR_OK) {
                         $imageTmpPath = $_FILES['images']['tmp_name'][$i];
-                        // Sanitize and create unique filename
                         $originalName = basename($_FILES['images']['name'][$i]);
                         $fileExtension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
-                        // Create a more unique name to prevent collisions
                         $imageName = uniqid('img_', true) . '.' . $fileExtension;
                         $uploadFilePath = $uploadDir . $imageName;
 
-                        // Validate file type and check if it's a real image
                         $check = getimagesize($imageTmpPath);
                         if ($check !== false && in_array($fileExtension, $allowedExtensions)) {
                             if (move_uploaded_file($imageTmpPath, $uploadFilePath)) {
-                                // File moved successfully, insert into DB
                                 $stmtImage->bind_param("is", $newBlogId, $imageName);
                                 if (!$stmtImage->execute()) {
-                                    // If DB insert fails, stop and set flag
                                      throw new Exception("Image DB insert failed: " . $stmtImage->error);
                                 }
                             } else {
@@ -90,31 +76,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                              throw new Exception("Invalid file type or not an image: " . $originalName);
                         }
                     } elseif ($_FILES['images']['error'][$i] !== UPLOAD_ERR_NO_FILE) {
-                        // Handle other upload errors (e.g., file size limit)
                         throw new Exception("Error uploading file " . basename($_FILES['images']['name'][$i]) . ": Error Code " . $_FILES['images']['error'][$i]);
                     }
-                } // End of for loop
+                }
 
                 $stmtImage->close();
 
-            } // End if images isset
+            }
 
-            // 3. If everything went well, commit the transaction
             $conn->commit();
-            $successMessage = "Blog post added successfully!";
-             // Redirect after successful post to prevent resubmission
-             header("Location: index.php?status=post_success");
-             exit();
+            header("Location: index.php?status=post_success");
+            exit();
 
         } catch (Exception $e) {
-            // An error occurred, rollback the transaction
             $conn->rollback();
             $errorMessage = "Error posting blog: " . $e->getMessage();
-            // Log the detailed error for debugging: error_log($e->getMessage());
         }
     }
 }
-// --- End of POST Handling Logic ---
 
 ?>
 
@@ -126,7 +105,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="stylesheet.css">
     <title>Add New Blog Post</title>
     <style>
-        /* Optional: Style for image preview */
         .image-preview-container {
             margin-top: 10px;
             display: flex;
@@ -145,7 +123,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             max-height: 100%;
             display: block;
         }
-        /* Basic error/success message styling */
         .form-error { color: #dc3545; background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 10px; border-radius: 4px; margin-bottom: 15px;}
         .form-success { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; padding: 10px; border-radius: 4px; margin-bottom: 15px;}
     </style>
@@ -157,16 +134,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h1>Add New Blog Post</h1>
 
         <?php
-        // Display error or success messages
         if (!empty($errorMessage)) {
             echo '<p class="form-error">' . htmlspecialchars($errorMessage) . '</p>';
         }
-        if (!empty($successMessage)) { // Display success if redirect fails for some reason
-             echo '<p class="form-success">' . htmlspecialchars($successMessage) . '</p>';
+        if (isset($_GET['status']) && $_GET['status'] === 'post_success' && empty($errorMessage) ) { // Only show success if no error from current submission attempt
+             echo '<p class="form-success">Blog post added successfully! You will be redirected shortly.</p>';
+             // Optionally add a meta refresh or JS redirect here if header() didn't work due to output
         }
         ?>
 
-        <!-- Note the name="images[]" and multiple attribute -->
         <form class="add-blog-form" method="POST" action="add_blog.php" enctype="multipart/form-data">
 
             <div>
@@ -182,21 +158,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div>
                 <label for="images">Images (Optional, Select Multiple):</label><br>
                 <input type="file" id="images" name="images[]" multiple accept="image/jpeg, image/png, image/gif, image/webp">
-                <div id="imagePreview" class="image-preview-container"></div> <!-- Container for preview -->
+                <div id="imagePreview" class="image-preview-container"></div>
             </div>
 
             <button type="submit">Post Blog</button>
         </form>
 
-    </div> <!-- End main-content -->
+    </div>
 
     <script>
-        // Optional: JavaScript for image preview before upload
         const imageInput = document.getElementById('images');
         const previewContainer = document.getElementById('imagePreview');
 
         imageInput.addEventListener('change', function() {
-            previewContainer.innerHTML = ''; // Clear previous previews
+            previewContainer.innerHTML = '';
             if (this.files) {
                 Array.from(this.files).forEach(file => {
                     if (file.type.startsWith('image/')) {
@@ -216,7 +191,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
     </script>
 
-<?php include 'footer.php'; ?>
+<?php
+include 'footer.php';
+if (isset($conn) && $conn instanceof mysqli) {
+    $conn->close();
+}
+?>
 
 </body>
 </html>

@@ -1,12 +1,7 @@
 <?php
-
-include("header.php");
 include("../db_connect.php");
+include("header.php");
 
-
-// Header and Footer are included within the HTML below
-
-// --- Existing function for fetching comments (remains unchanged) ---
 function fetch_comments($conn, $blog_id, $parent_id = NULL, $depth = 0) {
     $query = "SELECT comments.id, comments.comment, users.username, comments.created_at,
                      COALESCE(SUM(CASE WHEN comment_votes.vote = 1 THEN 1 ELSE 0 END), 0) as upvotes,
@@ -17,74 +12,89 @@ function fetch_comments($conn, $blog_id, $parent_id = NULL, $depth = 0) {
               WHERE comments.blog_id = ? AND comments.parent_comment_id " .
               ($parent_id === NULL ? "IS NULL" : "= ?") .
               " GROUP BY comments.id
-              ORDER BY comments.created_at DESC"; // Or ASC if preferred
+              ORDER BY comments.created_at DESC";
 
     $stmt = $conn->prepare($query);
     if ($stmt === false) {
-         error_log("Prepare failed (fetch_comments): " . $conn->error); // Log error
-         return; // Exit function on prepare error
+         error_log("Prepare failed (fetch_comments): " . $conn->error);
+         return;
     }
-
     if ($parent_id === NULL) {
         $stmt->bind_param("i", $blog_id);
     } else {
         $stmt->bind_param("ii", $blog_id, $parent_id);
     }
-
     if (!$stmt->execute()) {
-        error_log("Execute failed (fetch_comments): " . $stmt->error); // Log error
+        error_log("Execute failed (fetch_comments): " . $stmt->error);
         $stmt->close();
-        return; // Exit function on execute error
+        return;
     }
-
     $result = $stmt->get_result();
-
     if ($result->num_rows > 0) {
         $container_class = ($depth > 0) ? 'nested-comments' : '';
         echo '<div class="'.$container_class.'" id="comment-thread-'.($parent_id ?? 'root').'" '.($depth > 0 ? 'style="margin-left: '.($depth * 20).'px;"' : '').'>';
-
         while ($comment = $result->fetch_assoc()) {
             $comment_id = $comment['id'];
             echo '<div class="comment-box" id="comment-'.$comment_id.'">';
-            echo '<div class="comment-header">';
-            echo '<span class="comment-username">'.htmlspecialchars($comment['username']).'</span>';
-            echo '<span class="comment-time">'.date("F j, Y, g:i a", strtotime($comment['created_at'])).'</span>';
-            echo '</div>';
+            echo '<div class="comment-header"><span class="comment-username">'.htmlspecialchars($comment['username']).'</span><span class="comment-time">'.date("F j, Y, g:i a", strtotime($comment['created_at'])).'</span></div>';
             echo '<p class="comment-content">'.nl2br(htmlspecialchars($comment['comment'])).'</p>';
-            echo '<div class="comment-actions">';
-                echo '<div class="vote-section">';
-                echo '<button class="vote-btn" data-comment-id="'.$comment_id.'" data-vote-type="1" aria-label="Upvote">▲</button>';
-                echo '<span id="upvotes-'.$comment_id.'">'.($comment['upvotes'] ?? 0).'</span>';
-                echo '<button class="vote-btn" data-comment-id="'.$comment_id.'" data-vote-type="-1" aria-label="Downvote">▼</button>';
-                echo '<span id="downvotes-'.$comment_id.'">'.($comment['downvotes'] ?? 0).'</span>';
-                echo '</div>';
-                if (isset($_SESSION['user_id'])) {
-                   echo '<button class="reply-btn" onclick="setReply('.$comment_id.')">Reply</button>';
-                }
+            echo '<div class="comment-actions"><div class="vote-section"><button class="vote-btn" data-comment-id="'.$comment_id.'" data-vote-type="1" aria-label="Upvote">▲</button><span id="upvotes-'.$comment_id.'">'.($comment['upvotes'] ?? 0).'</span><button class="vote-btn" data-comment-id="'.$comment_id.'" data-vote-type="-1" aria-label="Downvote">▼</button><span id="downvotes-'.$comment_id.'">'.($comment['downvotes'] ?? 0).'</span></div>';
+            if (isset($_SESSION['user_id'])) { echo '<button class="reply-btn" onclick="setReply('.$comment_id.')">Reply</button>'; }
             echo '</div>';
-            // Using nested-comments class also for the replies container for potential style reuse
             echo '<div class="nested-comments replies" id="replies-'.$comment_id.'" style="display: none;">';
-                fetch_comments($conn, $blog_id, $comment_id, $depth + 1); // Recursive call
-            echo '</div>';
-            echo '</div>'; // end comment-box
+            fetch_comments($conn, $blog_id, $comment_id, $depth + 1);
+            echo '</div></div>';
         }
-        echo '</div>'; // end container
+        echo '</div>';
     }
-    $stmt->close(); // Close statement when done
+    $stmt->close();
 }
-// --- End of fetch_comments function ---
 
+function render_blog_post_item_for_list($conn, $post_data) {
+    $first_image = null;
+    $queryFirstImage = "SELECT image_filename FROM blog_images WHERE blog_id = ? ORDER BY id ASC LIMIT 1";
+    $stmtFirstImage = $conn->prepare($queryFirstImage);
+    if ($stmtFirstImage) {
+        $stmtFirstImage->bind_param("i", $post_data['id']);
+        $stmtFirstImage->execute();
+        $resultFirstImage = $stmtFirstImage->get_result();
+        if ($imgRow = $resultFirstImage->fetch_assoc()) {
+            $first_image = $imgRow['image_filename'];
+        }
+        $stmtFirstImage->close();
+    }
 
-// --- Determine View (Single Post or List) ---
+    ob_start();
+    ?>
+    <article class="blog-post">
+        <h2>
+            <a href="doomscrollblog.php?id=<?php echo $post_data['id']; ?>" class="blog-title">
+                <?php echo htmlspecialchars($post_data['title']); ?>
+            </a>
+        </h2>
+        <p class="post-meta">
+            <strong>By:</strong> <?php echo htmlspecialchars($post_data['author']); ?> |
+            <small><?php echo date("F j, Y", strtotime($post_data['created_at'])); ?></small>
+        </p>
+        <?php if (!empty($first_image)): ?>
+            <a href="doomscrollblog.php?id=<?php echo $post_data['id']; ?>">
+               <img class="blog-post-image" src="uploads/<?php echo htmlspecialchars($first_image); ?>" alt="<?php echo htmlspecialchars($post_data['title']); ?>">
+            </a>
+        <?php endif; ?>
+        <div class="post-excerpt">
+            <p><?php echo nl2br(htmlspecialchars(substr($post_data['content'], 0, 250))); ?>...</p>
+        </div>
+        <a href="doomscrollblog.php?id=<?php echo $post_data['id']; ?>" class="read-more-link">Read More »</a>
+    </article>
+    <?php
+    return ob_get_clean();
+}
+
 if (isset($_GET['id'])) {
-    // ===========================
-    // == SINGLE BLOG POST VIEW ==
-    // ===========================
     $blog_id = intval($_GET['id']);
     $blog = null;
-    $blog_images = []; // Array to hold image filenames
+    $blog_images = [];
 
-    // --- Fetch Main Blog Post Data ---
     $queryBlog = "SELECT title, content, author, created_at FROM blogs WHERE id = ?";
     $stmtBlog = $conn->prepare($queryBlog);
     if ($stmtBlog) {
@@ -94,31 +104,25 @@ if (isset($_GET['id'])) {
         $blog = $resultBlog->fetch_assoc();
         $stmtBlog->close();
     } else {
-         error_log("Prepare failed (fetch blog data): " . $conn->error); // Log error
+         error_log("Prepare failed (fetch blog data): " . $conn->error);
     }
-
-    // --- Check if blog post exists ---
     if (!$blog) {
-        // You might want to redirect to a 404 page or show a more user-friendly message
-        http_response_code(404); // Set appropriate HTTP status
+        http_response_code(404);
         die("Blog post not found.");
     }
-
-    // --- Fetch Associated Images ---
-    $queryImages = "SELECT image_filename FROM blog_images WHERE blog_id = ? ORDER BY id ASC"; // Or order by a specific column if added
+    $queryImages = "SELECT image_filename FROM blog_images WHERE blog_id = ? ORDER BY id ASC";
     $stmtImages = $conn->prepare($queryImages);
     if ($stmtImages) {
         $stmtImages->bind_param("i", $blog_id);
         $stmtImages->execute();
         $resultImages = $stmtImages->get_result();
         while ($imgRow = $resultImages->fetch_assoc()) {
-            $blog_images[] = $imgRow['image_filename']; // Add filename to array
+            $blog_images[] = $imgRow['image_filename'];
         }
         $stmtImages->close();
     } else {
-        error_log("Prepare failed (fetch images): " . $conn->error); // Log error
+        error_log("Prepare failed (fetch images): " . $conn->error);
     }
-
     ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -127,140 +131,78 @@ if (isset($_GET['id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="stylesheet.css">
     <title><?php echo htmlspecialchars($blog['title']); ?> - Your Blog Name</title>
-    <!-- JavaScript functions for comment interaction -->
     <script>
-        function setReply(commentId) {
-            // Clear previous status and set hidden input
-            cancelReply();
-            document.getElementById("parent_comment_id").value = commentId;
-
-            const commentForm = document.querySelector(".comment-form");
-            const targetComment = document.getElementById("comment-" + commentId);
-            if (commentForm && targetComment) {
-                 // Create and insert the 'Replying to...' status message
-                 const statusP = document.createElement('p');
-                 statusP.className = 'reply-status';
-                 // Use textContent for security when displaying username
-                 const username = targetComment.querySelector('.comment-username') ? targetComment.querySelector('.comment-username').textContent : 'user';
-                 statusP.innerHTML = `Replying to <strong>${username}</strong> <button type="button" class="cancel-reply-btn" onclick="cancelReply()">Cancel</button>`;
-                 commentForm.insertAdjacentElement('afterbegin', statusP);
-            }
-            // Focus the textarea
-            const textarea = document.querySelector(".comment-textarea");
-            if (textarea) textarea.focus();
-        }
-
-        function cancelReply() {
-            // Reset hidden input
-            const parentInput = document.getElementById("parent_comment_id");
-            if (parentInput) parentInput.value = 'NULL';
-
-            // Remove status message
-            const commentForm = document.querySelector(".comment-form");
-            const existingStatus = commentForm ? commentForm.querySelector('.reply-status') : null;
-            if (existingStatus) existingStatus.remove();
-        }
-
-        // Note: toggleReplies functionality might require adding a specific button per comment
-        function toggleReplies(commentId) {
-            var repliesDiv = document.getElementById("replies-" + commentId);
-            var button = event.target; // Assumes the button itself was clicked
-
-            if (repliesDiv && button) {
-                if (repliesDiv.style.display === "none") {
-                    repliesDiv.style.display = "block";
-                    button.innerHTML = "▼ Hide Replies";
-                } else {
-                    repliesDiv.style.display = "none";
-                    button.innerHTML = "▶ Show Replies";
-                }
-            }
-        }
+        function setReply(commentId) { cancelReply(); document.getElementById("parent_comment_id").value = commentId; const commentForm = document.querySelector(".comment-form"); const targetComment = document.getElementById("comment-" + commentId); if (commentForm && targetComment) { const statusP = document.createElement('p'); statusP.className = 'reply-status'; const username = targetComment.querySelector('.comment-username') ? targetComment.querySelector('.comment-username').textContent : 'user'; statusP.innerHTML = `Replying to <strong>${username}</strong> <button type="button" class="cancel-reply-btn" onclick="cancelReply()">Cancel</button>`; commentForm.insertAdjacentElement('afterbegin', statusP); } const textarea = document.querySelector(".comment-textarea"); if (textarea) textarea.focus(); }
+        function cancelReply() { const parentInput = document.getElementById("parent_comment_id"); if (parentInput) parentInput.value = 'NULL'; const commentForm = document.querySelector(".comment-form"); const existingStatus = commentForm ? commentForm.querySelector('.reply-status') : null; if (existingStatus) existingStatus.remove(); }
+        function toggleReplies(commentId) { var repliesDiv = document.getElementById("replies-" + commentId); var button = event.target; if (repliesDiv && button) { if (repliesDiv.style.display === "none") { repliesDiv.style.display = "block"; button.innerHTML = "▼ Hide Replies"; } else { repliesDiv.style.display = "none"; button.innerHTML = "▶ Show Replies"; } } }
     </script>
-     <!-- Defer loading vote.js -->
      <script src="vote.js" defer></script>
-     <!-- Optional: Basic CSS for the image gallery grid -->
-     <style>
-        .image-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 15px 0; }
-        .blog-post-image { border: 1px solid #eee; padding: 3px; } /* Example border */
-     </style>
+     <style>.image-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 15px 0; } .blog-post-image { border: 1px solid #eee; padding: 3px; }</style>
 </head>
 <body>
-
-
     <div class="main-content">
-
         <article class="blog-post-full">
-            <!-- Blog Post Title -->
             <h2><?php echo htmlspecialchars($blog['title']); ?></h2>
-            <!-- Meta Information -->
-            <p class="post-meta">
-                <strong>By:</strong> <?php echo htmlspecialchars($blog['author']); ?> |
-                <small><?php echo date("F j, Y", strtotime($blog['created_at'])); ?></small>
-            </p>
-
-            <!-- Display Multiple Images -->
+            <p class="post-meta"><strong>By:</strong> <?php echo htmlspecialchars($blog['author']); ?> | <small><?php echo date("F j, Y", strtotime($blog['created_at'])); ?></small></p>
             <?php if (!empty($blog_images)): ?>
                 <div class="image-gallery">
                     <?php foreach ($blog_images as $image_filename): ?>
-                        <img class="blog-post-image" src="uploads/<?php echo htmlspecialchars($image_filename); ?>" alt="<?php echo htmlspecialchars($blog['title']); // Basic alt text ?>">
+                        <img class="blog-post-image" src="uploads/<?php echo htmlspecialchars($image_filename); ?>" alt="<?php echo htmlspecialchars($blog['title']); ?>">
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
-
-            <!-- Blog Post Content -->
-            <div class="post-content-full">
-                 <p><?php echo nl2br(htmlspecialchars($blog['content'])); ?></p>
-            </div>
+            <div class="post-content-full"><p><?php echo nl2br(htmlspecialchars($blog['content'])); ?></p></div>
         </article>
-
         <hr>
-
-        <!-- Comments Section -->
-        <section class="comments-section">
-            <h3>Comments</h3>
-            <?php fetch_comments($conn, $blog_id); // Use the existing function ?>
-        </section>
-
-        <!-- Comment Form (Logged-in users only) -->
+        <section class="comments-section"><h3>Comments</h3><?php fetch_comments($conn, $blog_id); ?></section>
         <?php if (isset($_SESSION['user_id'])): ?>
-            <hr>
-            <section class="comment-form-section">
-                <h3>Add a Comment</h3>
-                <form method="POST" action="post_comment.php" class="comment-form">
-                    <input type="hidden" name="blog_id" value="<?php echo $blog_id; ?>">
-                    <input type="hidden" name="parent_comment_id" id="parent_comment_id" value="NULL">
-                    <!-- JS reply status will be inserted here -->
-                    <label for="comment-textarea-input" class="sr-only">Comment:</label>
-                    <textarea name="comment" id="comment-textarea-input" required placeholder="Write your comment..." class="comment-textarea" rows="5"></textarea><br>
-                    <button type="submit" class="comment-btn">Post Comment</button>
-                </form>
-            </section>
-        <?php else: // Prompt for non-logged-in users ?>
-             <hr>
-            <p class="login-prompt"><a href="login.php">Log in</a> or <a href="register.php">Register</a> to post a comment.</p>
+            <hr><section class="comment-form-section"><h3>Add a Comment</h3><form method="POST" action="post_comment.php" class="comment-form"><input type="hidden" name="blog_id" value="<?php echo $blog_id; ?>"><input type="hidden" name="parent_comment_id" id="parent_comment_id" value="NULL"><label for="comment-textarea-input" class="sr-only">Comment:</label><textarea name="comment" id="comment-textarea-input" required placeholder="Write your comment..." class="comment-textarea" rows="5"></textarea><br><button type="submit" class="comment-btn">Post Comment</button></form></section>
+        <?php else: ?>
+             <hr><p class="login-prompt"><a href="login.php">Log in</a> or <a href="register.php">Register</a> to post a comment.</p>
         <?php endif; ?>
-
-    </div> <!-- End main-content -->
-
-    <?php include("footer.php"); // Include footer ?>
-
+    </div>
+    <?php include("footer.php"); ?>
 </body>
 </html>
-
-<?php
+    <?php
 } else {
-    // ============================
-    // == LIST ALL BLOG POSTS VIEW ==
-    // ============================
-    // Fetch main blog post data (excluding images column now)
-    $queryBlogs = "SELECT id, title, author, content, created_at FROM blogs ORDER BY created_at DESC";
-    $resultBlogs = $conn->query($queryBlogs); // Use query for simple select
+    $limit = 10;
+    $offset = isset($_GET['offset']) ? intval($_GET['offset']) : 0;
 
-    // Prepare statement for fetching the first image (reused in loop)
-    $queryFirstImage = "SELECT image_filename FROM blog_images WHERE blog_id = ? ORDER BY id ASC LIMIT 1";
-    $stmtFirstImage = $conn->prepare($queryFirstImage);
+    $queryBlogs = "SELECT id, title, author, content, created_at FROM blogs ORDER BY created_at DESC LIMIT ? OFFSET ?";
+    $stmtBlogs = $conn->prepare($queryBlogs);
 
+    $posts_html = '';
+    $has_more_posts = false;
+
+    if ($stmtBlogs) {
+        $stmtBlogs->bind_param("ii", $limit, $offset);
+        $stmtBlogs->execute();
+        $resultBlogs = $stmtBlogs->get_result();
+
+        while ($row = $resultBlogs->fetch_assoc()) {
+            $posts_html .= render_blog_post_item_for_list($conn, $row);
+        }
+        $stmtBlogs->close();
+
+        $queryCount = "SELECT COUNT(id) as total FROM blogs";
+        $countResult = $conn->query($queryCount);
+        $totalPosts = 0;
+        if ($countRow = $countResult->fetch_assoc()) {
+            $totalPosts = $countRow['total'];
+        }
+        if (($offset + $limit) < $totalPosts) {
+            $has_more_posts = true;
+        }
+    } else {
+        error_log("Prepare failed (list view blogs): " . $conn->error);
+    }
+
+    if (isset($_GET['ajax_load']) && $_GET['ajax_load'] == 'true') {
+        header('Content-Type: application/json');
+        echo json_encode(['html' => $posts_html, 'has_more' => $has_more_posts]);
+        exit();
+    }
     ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -269,82 +211,89 @@ if (isset($_GET['id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="stylesheet.css">
     <title>Blog Posts - Your Blog Name</title>
+    <style>
+        #loading-indicator { text-align: center; padding: 20px; display: none; font-style: italic; color: #555; }
+    </style>
 </head>
 <body>
-
-    <?php include("header.php"); // Include navigation ?>
-
     <div class="main-content">
-
         <h1>Latest Blog Posts</h1>
+        <div id="blog-posts-container">
+            <?php echo $posts_html; ?>
+        </div>
+        <div id="loading-indicator">Loading more posts...</div>
+    </div>
+    <?php include("footer.php"); ?>
 
-        <?php if ($resultBlogs && $resultBlogs->num_rows > 0): ?>
-            <?php while ($row = $resultBlogs->fetch_assoc()):
-                $first_image = null; // Reset first image for each post
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const postsContainer = document.getElementById('blog-posts-container');
+            const loadingIndicator = document.getElementById('loading-indicator');
+            let currentOffset = <?php echo $limit; ?>;
+            const initialLimit = <?php echo $limit; ?>;
+            let isLoading = false;
+            let hasMore = <?php echo $has_more_posts ? 'true' : 'false'; ?>;
 
-                // Fetch the first image for the current post
-                if ($stmtFirstImage) {
-                    $stmtFirstImage->bind_param("i", $row['id']);
-                    $stmtFirstImage->execute();
-                    $resultFirstImage = $stmtFirstImage->get_result();
-                    if ($imgRow = $resultFirstImage->fetch_assoc()) {
-                        $first_image = $imgRow['image_filename'];
-                    }
-                    // $resultFirstImage->close(); // Optional: close result set explicitly if needed
-                } else {
-                     error_log("Prepare failed (fetch first image): " . $conn->error); // Log error
-                }
-            ?>
-                <article class="blog-post">
-                    <!-- Post Title -->
-                    <h2>
-                        <a href="doomscrollblog.php?id=<?php echo $row['id']; ?>" class="blog-title">
-                            <?php echo htmlspecialchars($row['title']); ?>
-                        </a>
-                    </h2>
-                    <!-- Post Meta -->
-                    <p class="post-meta">
-                        <strong>By:</strong> <?php echo htmlspecialchars($row['author']); ?> |
-                        <small><?php echo date("F j, Y", strtotime($row['created_at'])); ?></small>
-                    </p>
+            function loadMorePosts() {
+                if (isLoading || !hasMore) return;
 
-                    <!-- Display First Image (if exists) -->
-                    <?php if (!empty($first_image)): ?>
-                        <a href="doomscrollblog.php?id=<?php echo $row['id']; ?>">
-                           <img class="blog-post-image" src="uploads/<?php echo htmlspecialchars($first_image); ?>" alt="<?php echo htmlspecialchars($row['title']); // Basic alt text ?>">
-                        </a>
-                    <?php endif; ?>
+                isLoading = true;
+                if(loadingIndicator) loadingIndicator.style.display = 'block';
 
-                    <!-- Post Excerpt -->
-                    <div class="post-excerpt">
-                        <p><?php echo nl2br(htmlspecialchars(substr($row['content'], 0, 250))); ?>...</p>
-                    </div>
-
-                    <!-- Read More Link -->
-                    <a href="doomscrollblog.php?id=<?php echo $row['id']; ?>" class="read-more-link">Read More »</a>
-
-                </article> <!-- End single blog post item -->
-            <?php endwhile;
-
-            // Close the prepared statement for first image after the loop
-            if ($stmtFirstImage) {
-                $stmtFirstImage->close();
+                fetch(`doomscrollblog.php?ajax_load=true&offset=${currentOffset}&limit=${initialLimit}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.html && data.html.trim() !== '') {
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = data.html;
+                            while(tempDiv.firstChild) {
+                                postsContainer.appendChild(tempDiv.firstChild);
+                            }
+                            currentOffset += initialLimit;
+                        }
+                        hasMore = data.has_more;
+                        if (!hasMore && loadingIndicator) {
+                            loadingIndicator.textContent = 'No more posts to load.';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading more posts:', error);
+                        if(loadingIndicator) loadingIndicator.textContent = 'Error loading posts. Please try again later.';
+                    })
+                    .finally(() => {
+                        isLoading = false;
+                        if(hasMore && loadingIndicator) {
+                            loadingIndicator.style.display = 'none';
+                        }
+                    });
             }
-            ?>
-        <?php else: // No posts found ?>
-            <p>No blog posts have been published yet.</p>
-        <?php endif; ?>
 
-    </div> <!-- End main-content -->
+            let scrollTimeout;
+            window.addEventListener('scroll', () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    const threshold = 200;
+                    if ((window.innerHeight + window.scrollY) >= (document.documentElement.offsetHeight - threshold)) {
+                        loadMorePosts();
+                    }
+                }, 100);
+            });
 
-     <?php include("footer.php"); // Include footer ?>
-
+            if (hasMore && (postsContainer.offsetHeight < window.innerHeight)) {
+                 loadMorePosts();
+            }
+        });
+    </script>
 </body>
 </html>
-<?php
-} // End of main if/else block determining view type
+    <?php
+}
 
-// Close the database connection once at the end
 if (isset($conn) && $conn instanceof mysqli) {
     $conn->close();
 }

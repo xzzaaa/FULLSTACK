@@ -12,7 +12,6 @@ include '../db_connect.php';
 include("header.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Hämta formulärdata
     $name = htmlspecialchars($_POST['name']);
     $email = htmlspecialchars($_POST['email']);
     $message = htmlspecialchars($_POST['message']);

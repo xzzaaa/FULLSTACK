@@ -47,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $stmt->execute();
 
-    // NY: räkna upvotes och downvotes separat
     $stmt = $conn->prepare("SELECT 
         SUM(CASE WHEN vote = 1 THEN 1 ELSE 0 END) AS upvotes, 
         SUM(CASE WHEN vote = -1 THEN 1 ELSE 0 END) AS downvotes 

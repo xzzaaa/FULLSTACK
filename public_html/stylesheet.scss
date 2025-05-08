@@ -1,35 +1,27 @@
-// --- stylesheet.scss (Compact Blog Style) ---
-
-// --- Variables ---
-// Colors
 $color-text: #333333;
 $color-text-light: #555555;
 $color-text-muted: #777777;
 $color-background: #ffffff;
-$color-background-alt: #f8f8f8; // Slightly off-white for subtle separation
+$color-background-alt: #f8f8f8;
 $color-border: #dddddd;
-$color-primary: #007bff; // Standard link blue
-$color-accent: #6c757d; // Muted accent (e.g., for buttons)
+$color-primary: #007bff;
+$color-accent: #6c757d;
 $color-success: #28a745;
 $color-danger: #dc3545;
 
-// Fonts
-$font-primary: Arial, Helvetica, sans-serif; // Classic sans-serif
-$font-headings: Georgia, Times, 'Times New Roman', serif; // Serif for headings
+$font-primary: Arial, Helvetica, sans-serif;
+$font-headings: Georgia, Times, 'Times New Roman', serif;
 
-// Spacing & Sizes
-$spacing-unit-base: 1rem; // ~16px
-$spacing-unit-sm: $spacing-unit-base * 0.5;  // ~8px
-$spacing-unit-md: $spacing-unit-base * 1;    // ~16px
-$spacing-unit-lg: $spacing-unit-base * 1.5;  // ~24px
-$content-max-width: 760px; // Typical blog content width
-$border-radius: 3px; // Subtle rounding
+$spacing-unit-base: 1rem;
+$spacing-unit-sm: $spacing-unit-base * 0.5;
+$spacing-unit-md: $spacing-unit-base * 1;
+$spacing-unit-lg: $spacing-unit-base * 1.5;
+$content-max-width: 760px;
+$border-radius: 3px;
 
-// Transitions (less emphasis)
 $transition-speed: 0.2s;
 $transition-ease: ease-in-out;
 
-// --- Base & Reset ---
 *,
 *::before,
 *::after {
@@ -43,12 +35,11 @@ body {
   background-color: $color-background;
   color: $color-text;
   line-height: 1.6;
-  font-size: 15px; // Slightly smaller base for compactness
-  padding-top: 60px; // Add space below fixed nav
+  font-size: 15px;
+  padding-top: 60px;
 }
 
-// --- Layout ---
-.main-content, // Apply this class around your main page content (post list, single post)
+.main-content,
 .post-container,
 .form-container,
 .contactForm,
@@ -58,7 +49,6 @@ body {
   padding: 0 $spacing-unit-md;
 }
 
-// --- Typography ---
 h1, h2, h3, h4, h5, h6 {
   font-family: $font-headings;
   color: darken($color-text, 10%);
@@ -66,9 +56,9 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.3;
 }
 
-h1 { font-size: 2rem; margin-top: $spacing-unit-lg; } // Top-level page title
-h2 { font-size: 1.7rem; } // Post titles
-h3 { font-size: 1.4rem; } // Section titles (like Comments, Add Comment)
+h1 { font-size: 2rem; margin-top: $spacing-unit-lg; }
+h2 { font-size: 1.7rem; }
+h3 { font-size: 1.4rem; }
 h4 { font-size: 1.2rem; }
 
 p {
@@ -90,7 +80,7 @@ a {
 small, .post-meta, .comment-time {
   font-size: 0.85em;
   color: $color-text-muted;
-  display: block; // Ensure it takes its own line/space
+  display: block;
 }
 
 hr {
@@ -99,57 +89,43 @@ hr {
   margin: $spacing-unit-lg 0;
 }
 
-// --- stylesheet.scss (Additions/Modifications) ---
-
-// Find the existing img style or add this block if none exists specifically for blog images
 img {
-  max-width: 100%; // Good default for all images
-  height: auto;    // Maintain aspect ratio
-  vertical-align: middle; // Good practice for inline/inline-block alignment issues
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
 }
 
-// Add this new class specifically for blog post images
 .blog-post-image {
-  display: block; // Make it a block element for easier margin control
-  max-width: 100%; // Ensure it's responsive and doesn't overflow parent
-  height: auto;    // Maintain aspect ratio
-  margin-top: $spacing-unit-md;      // Use your defined spacing variables
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-top: $spacing-unit-md;
   margin-bottom: $spacing-unit-md;
-  border-radius: $border-radius;     // Use your defined border radius variable
-  // Remove any conflicting inline styles from the PHP if they existed previously
+  border-radius: $border-radius;
 }
 
-// --- Control Image Size in Different Contexts ---
-
-// Style for images within the LIST VIEW (.blog-post)
 .blog-post {
   .blog-post-image {
-    // Make images in the list view significantly smaller
-    max-width: 300px; // Example: Limit width to 300px
-    // Or use a percentage if you prefer:
-    // max-width: 40%;
-    margin-left: auto;  // Center the image if it's narrower than the container
-    margin-right: auto; // Center the image
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
-// Style for images within the SINGLE POST VIEW (.blog-post-full)
-.blog-post-full { // The <article> tag on the single post page
+.blog-post-full {
   .blog-post-image {
-    // Images on the single post page can be larger, but maybe not full-width
-    max-width: 75%;   // Example: Allow up to 75% of the content width
-    margin-left: auto;  // Center it
-    margin-right: auto; // Center it
+    max-width: 75%;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
-// --- Add style for the new read-more-link ---
 a.read-more-link {
-    display: inline-block; // Or block if you want it on its own line
+    display: inline-block;
     margin-top: $spacing-unit-sm;
     font-size: 0.9em;
     font-weight: bold;
-    color: $color-primary; // Use your primary link color
+    color: $color-primary;
 
     &:hover {
         color: darken($color-primary, 10%);
@@ -157,7 +133,6 @@ a.read-more-link {
     }
 }
 
-// --- Add style for reply status and cancel button (Optional but nice) ---
 .reply-status {
     background-color: lighten($color-primary, 45%);
     border: 1px solid lighten($color-primary, 35%);
@@ -168,7 +143,7 @@ a.read-more-link {
 
     strong { color: darken($color-primary, 10%); }
 
-    button.cancel-reply-btn { // Style the cancel button
+    button.cancel-reply-btn {
         background: none;
         border: none;
         color: $color-danger;
@@ -180,7 +155,6 @@ a.read-more-link {
     }
 }
 
-// --- Style for login prompt ---
 .login-prompt {
     text-align: center;
     color: $color-text-muted;
@@ -188,27 +162,25 @@ a.read-more-link {
     a { margin: 0 $spacing-unit-sm * 0.5; }
 }
 
-// --- Style for screen-reader only label ---
 .sr-only {
 	border: 0 !important;
-	clip: rect(1px, 1px, 1px, 1px) !important; /* 1 */
+	clip: rect(1px, 1px, 1px, 1px) !important;
 	-webkit-clip-path: inset(50%) !important;
-		clip-path: inset(50%) !important;  /* 2 */
+	clip-path: inset(50%) !important;
 	height: 1px !important;
 	margin: -1px !important;
 	overflow: hidden !important;
 	padding: 0 !important;
 	position: absolute !important;
 	width: 1px !important;
-	white-space: nowrap !important; /* 3 */
+	white-space: nowrap !important;
 }
 
-// --- Navigation ---
 nav {
   background-color: darken($color-background-alt, 2%);
   padding: $spacing-unit-sm 0;
   border-bottom: 1px solid $color-border;
-  position: fixed; // Fixed navigation bar
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -216,23 +188,23 @@ nav {
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 
   .homepagenavbar {
-    max-width: $content-max-width + 100px; // Allow nav to be slightly wider
+    max-width: $content-max-width + 100px;
     margin: 0 auto;
     display: flex;
-    justify-content: center; // Center nav items
+    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     gap: $spacing-unit-md;
     padding: $spacing-unit-sm $spacing-unit-md;
 
-    a.button { // Style nav links as subtle buttons or just links
+    a.button {
       background-color: transparent;
       color: $color-text-light;
       padding: $spacing-unit-sm $spacing-unit-md * 0.75;
-      border: 1px solid transparent; // Keep space, no visible border
+      border: 1px solid transparent;
       border-radius: $border-radius;
       text-decoration: none;
-      font-weight: normal; // Less emphasis than primary buttons
+      font-weight: normal;
       font-size: 0.9em;
       transition: background-color $transition-speed $transition-ease, color $transition-speed $transition-ease;
 
@@ -241,7 +213,6 @@ nav {
         color: $color-text;
         text-decoration: none;
       }
-      // Indicate active page if possible (requires PHP adding class)
       &.active {
           font-weight: bold;
           color: $color-primary;
@@ -250,9 +221,9 @@ nav {
     }
   }
 
-  ul { // User greeting - positioned to the right typically
+  ul {
     list-style: none;
-    position: absolute; // Position relative to nav
+    position: absolute;
     right: $spacing-unit-md;
     top: 50%;
     transform: translateY(-50%);
@@ -267,13 +238,12 @@ nav {
   }
 }
 
-// --- Intro Page ---
 .intro-page {
   text-align: center;
   padding-top: $spacing-unit-lg * 2;
   padding-bottom: $spacing-unit-lg * 2;
 
-  a.flex-button { // Reusing this class name
+  a.flex-button {
       display: inline-block;
       background-color: $color-accent;
       color: $color-background;
@@ -292,15 +262,14 @@ nav {
   }
 }
 
-// --- Blog Post List & Single Post Preview ---
-.post-container { // Container for latest post preview on index
+.post-container {
     background-color: $color-background-alt;
     border: 1px solid $color-border;
     padding: $spacing-unit-lg;
     border-radius: $border-radius;
     margin-bottom: $spacing-unit-lg;
 
-    .post-title { // Title like "Current Post:"
+    .post-title {
         margin-bottom: $spacing-unit-md;
         font-size: 1.2em;
         color: $color-text-muted;
@@ -309,7 +278,7 @@ nav {
     }
 }
 
-.blog-post { // Applied to each post in a list AND the preview
+.blog-post {
   margin-bottom: $spacing-unit-lg * 1.5;
   padding-bottom: $spacing-unit-lg * 1.5;
   border-bottom: 1px solid $color-border;
@@ -320,7 +289,7 @@ nav {
     padding-bottom: 0;
   }
 
-  h2 { // Post title in list view
+  h2 {
     margin-bottom: $spacing-unit-sm;
     a.blog-title {
       color: $color-text;
@@ -331,33 +300,32 @@ nav {
     }
   }
 
-   h3.post-heading { // Post title in preview box
+   h3.post-heading {
         margin-bottom: $spacing-unit-sm;
-        font-size: 1.5rem; // Make preview title prominent
+        font-size: 1.5rem;
         color: $color-text;
    }
 
 
   p {
-    margin-bottom: $spacing-unit-md * 0.75; // Tighter paragraph spacing
+    margin-bottom: $spacing-unit-md * 0.75;
   }
 
-  // Meta info (By: Author | Date)
-  p > strong { // Styling for "By:"
-      color: $color-text; // Make 'By' stand out slightly
+  p > strong {
+      color: $color-text;
   }
-  small { // Date on list view, or full meta line in preview
+  small {
       margin-top: $spacing-unit-sm;
   }
-  .post-meta { // Specific meta line in preview
+  .post-meta {
       margin-bottom: $spacing-unit-md;
   }
 
-  .post-content { // Used in preview box
+  .post-content {
       color: $color-text-light;
   }
 
-  .read-more { // Button in preview box
+  .read-more {
     display: inline-block;
     background-color: $color-accent;
     color: $color-background;
@@ -375,27 +343,22 @@ nav {
   }
 }
 
-// --- Single Blog Post Page ---
-// Uses base h2, p, small, hr, img styles defined earlier.
-// Container handled by .main-content
-
-// --- Comments Section ---
 .comments-section {
   margin-top: $spacing-unit-lg * 2;
-  border-top: 2px solid $color-border; // Stronger separator
+  border-top: 2px solid $color-border;
   padding-top: $spacing-unit-lg;
 
-  h3 { // "Comments" title
+  h3 {
     margin-bottom: $spacing-unit-lg;
   }
 
   .comment-box {
-    background: lighten($color-background-alt, 2%); // Very subtle background
+    background: lighten($color-background-alt, 2%);
     border: 1px solid $color-border;
     padding: $spacing-unit-md;
     margin-bottom: $spacing-unit-md;
     border-radius: $border-radius;
-    position: relative; // For potential absolute elements later if needed
+    position: relative;
 
     .comment-header {
       display: flex;
@@ -404,12 +367,11 @@ nav {
       margin-bottom: $spacing-unit-sm;
       font-size: 0.9em;
 
-      .comment-username { // Changed class name from PHP
+      .comment-username {
         font-weight: bold;
         color: $color-text;
         margin-right: $spacing-unit-sm;
       }
-      // .comment-time uses base styles
     }
 
     .comment-content {
@@ -417,26 +379,26 @@ nav {
       color: $color-text-light;
       margin-bottom: $spacing-unit-md;
       word-wrap: break-word;
-      white-space: pre-wrap; // Respect newlines from nl2br
+      white-space: pre-wrap;
     }
 
-    .comment-actions { // Wrapper for votes and reply
+    .comment-actions {
         display: flex;
         align-items: center;
         gap: $spacing-unit-md;
-        flex-wrap: wrap; // Allow wrapping on small screens
+        flex-wrap: wrap;
     }
 
-    .vote-section { // Vote controls block
+    .vote-section {
         display: inline-flex;
         align-items: center;
-        gap: $spacing-unit-sm * 0.5; // Very tight gap
+        gap: $spacing-unit-sm * 0.5;
 
         .vote-btn {
             background: none;
             border: 1px solid $color-border;
             color: $color-text-muted;
-            padding: 2px 6px; // Compact buttons
+            padding: 2px 6px;
             border-radius: $border-radius;
             cursor: pointer;
             font-size: 0.9em;
@@ -445,28 +407,28 @@ nav {
 
             &:hover { background: darken($color-background-alt, 5%); }
 
-            &[data-vote-type="1"]:hover { // Upvote
+            &[data-vote-type="1"]:hover {
                 border-color: $color-success;
                 color: $color-success;
             }
-            &[data-vote-type="-1"]:hover { // Downvote
+            &[data-vote-type="-1"]:hover {
                 border-color: $color-danger;
                 color: $color-danger;
             }
         }
-        span { // Vote counts
+        span {
             font-size: 0.85em;
-            min-width: 15px; // Prevent jumpiness
+            min-width: 15px;
             text-align: center;
             color: $color-text-muted;
-            padding: 0 2px; // Minimal padding
+            padding: 0 2px;
         }
-        #upvotes- { /* Can add specific color later if needed */ }
-        #downvotes- { /* Can add specific color later if needed */ }
+        #upvotes- { }
+        #downvotes- { }
     }
 
 
-    .reply-btn { // Reply button
+    .reply-btn {
       background-color: darken($color-background-alt, 5%);
       border: 1px solid $color-border;
       color: $color-text-light;
@@ -485,32 +447,25 @@ nav {
       }
     }
 
-    // Nested/Replied Comments
     .nested-comments {
-      // margin-left is handled by inline style in PHP - keep that for depth
       border-left: 2px solid $color-border;
       padding-left: $spacing-unit-md;
       margin-top: $spacing-unit-md;
-      // Remove the background/border from the parent .comment-box if it's just a container
       & > .comment-box {
-          // Style replies slightly differently if desired
-          background: lighten($color-background, 2%); // e.g. pure white for replies
+          background: lighten($color-background, 2%);
       }
     }
-     .replies { // Container for fetched replies (initially hidden)
-        // margin-left/padding-left/border-left will be handled by nested .comment-box structure or .nested-comments
-        // display: none; is handled by inline style
+     .replies {
      }
   }
 }
 
-// --- Comment Form ---
 .comment-form {
   margin-top: $spacing-unit-lg;
   border-top: 1px solid $color-border;
   padding-top: $spacing-unit-lg;
 
-  h3 { // "Add a Comment" title
+  h3 {
     margin-bottom: $spacing-unit-md;
   }
 
@@ -532,7 +487,7 @@ nav {
     }
   }
 
-  .comment-btn { // Post comment button
+  .comment-btn {
     background-color: $color-primary;
     color: $color-background;
     padding: $spacing-unit-sm $spacing-unit-lg;
@@ -548,22 +503,20 @@ nav {
   }
 }
 
-// --- General Forms (Login, Register, Contact) ---
-.form-container { // Wrapper div for login/register page content
-    // Uses .main-content styles
+.form-container {
 }
 
-.login-container, // Specific div on login page
-.contactForm form { // The <form> itself on contact page
+.login-container,
+.contactForm form {
     background: $color-background-alt;
     border: 1px solid $color-border;
     padding: $spacing-unit-lg;
     border-radius: $border-radius;
 
-    h1, h2 { // Form Titles (Login, Contact Us)
+    h1, h2 {
         text-align: center;
         margin-bottom: $spacing-unit-lg;
-        margin-top: 0; // Reset top margin if it's the first element
+        margin-top: 0;
     }
 
     label {
@@ -591,15 +544,15 @@ nav {
         }
     }
 
-    textarea { // Specific to contact form
+    textarea {
         min-height: 120px;
         resize: vertical;
-        font-family: $font-primary; // Ensure consistent font
+        font-family: $font-primary;
     }
 
-    button, // Login button
-    input[type="submit"] { // Contact submit
-        display: block; // Make buttons full width easily
+    button,
+    input[type="submit"] {
+        display: block;
         width: 100%;
         background-color: $color-primary;
         color: $color-background;
@@ -611,23 +564,23 @@ nav {
         cursor: pointer;
         text-align: center;
         transition: background-color $transition-speed $transition-ease;
-        margin-top: $spacing-unit-sm; // Space above button
+        margin-top: $spacing-unit-sm;
 
         &:hover {
             background-color: darken($color-primary, 10%);
         }
     }
 
-    #submitButton { // Wrapper div for contact submit - remove extra styles
+    #submitButton {
         margin-top: $spacing-unit-sm;
         input[type="submit"] {
-            margin-top: 0; // Reset margin if needed
-            background-color: $color-accent; // Different color for contact submit?
+            margin-top: 0;
+            background-color: $color-accent;
              &:hover { background-color: darken($color-accent, 10%); }
         }
     }
 
-    #response { // Login feedback message
+    #response {
         margin-top: $spacing-unit-md;
         text-align: center;
         font-weight: normal;
@@ -636,7 +589,6 @@ nav {
         font-size: 0.9em;
         border: 1px solid transparent;
 
-        // Add classes .success or .error via JS
         &.success {
             background-color: lighten($color-success, 45%);
             color: darken($color-success, 15%);
@@ -649,7 +601,6 @@ nav {
         }
     }
 
-    // Links below form (e.g., "Need an account?") - Assuming similar structure
     .form-footer-links {
       margin-top: $spacing-unit-lg;
       text-align: center;
@@ -657,17 +608,14 @@ nav {
     }
 }
 
-// Contact page specific header
 #contactHeader {
   text-align: center;
   margin-bottom: $spacing-unit-lg;
   h1 {
-    color: $color-text; // Standard heading color
+    color: $color-text;
   }
 }
 
-
-// --- Footer ---
 footer {
   text-align: center;
   padding: $spacing-unit-lg * 1.5 $spacing-unit-md;
@@ -677,11 +625,10 @@ footer {
   font-size: 0.9em;
   color: $color-text-muted;
 
-  // Simple structure assumed from HTML
   .footercontainer2, .socials, .label {
       margin-bottom: $spacing-unit-lg;
       h3 {
-          font-family: $font-primary; // Use primary font for footer headings
+          font-family: $font-primary;
           font-size: 1em;
           color: $color-text-light;
           margin-bottom: $spacing-unit-sm;
@@ -698,9 +645,9 @@ footer {
       }
   }
 
-  .socials a { // Basic styling for font-awesome links
+  .socials a {
       margin: 0 $spacing-unit-sm * 0.5;
-      font-size: 1.3em; // Make icons slightly larger
+      font-size: 1.3em;
   }
 
   .copyright {
@@ -709,15 +656,14 @@ footer {
   }
 }
 
-// --- Media Queries (Basic Example) ---
 @media (max-width: 768px) {
   body {
-      font-size: 14px; // Slightly smaller on mobile
-      padding-top: 50px; // Adjust for potentially smaller nav
+      font-size: 14px;
+      padding-top: 50px;
   }
 
   .main-content, .post-container, .form-container, .contactForm, .intro-page {
-      padding: 0 $spacing-unit-sm; // Less horizontal padding
+      padding: 0 $spacing-unit-sm;
   }
 
   h1 { font-size: 1.8rem; }
@@ -726,17 +672,40 @@ footer {
 
   nav {
       .homepagenavbar {
-          gap: $spacing-unit-sm; // Tighter nav items
-          justify-content: space-around; // Spread out a bit
+          gap: $spacing-unit-sm;
+          justify-content: space-around;
           padding: $spacing-unit-sm * 0.5 $spacing-unit-sm;
           a.button { padding: $spacing-unit-sm * 0.75 $spacing-unit-sm; font-size: 0.85em;}
       }
-      ul { // Hide or simplify user greeting on small screens
-          display: none; // Simplest approach
+      ul {
+          display: none;
       }
   }
 
    footer {
-     // Could stack footer columns here if using flexbox/grid
    }
+}
+
+.post-actions {
+  margin-top: 15px;
+  font-size: 0.95em;
+}
+.post-actions .action-link,
+.post-actions .read-more {
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: #999999;
+  color: white;
+  text-decoration: none;
+  border-radius: 3px;
+  margin-right: 10px;
+  transition: background-color 0.2s ease-in-out;
+}
+.post-actions .action-link:hover,
+.post-actions .read-more:hover { 
+  background-color: #626262;
+  text-decoration: none;
+}
+.post-actions span {
+  margin-right: 5px;
 }

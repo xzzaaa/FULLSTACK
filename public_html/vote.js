@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         "Content-Type": "application/x-www-form-urlencoded"
                     },
                     body: `comment_id=${commentId}&vote=${voteType}`,
-                    credentials: "include" // Viktigt för sessionscookies
+                    credentials: "include" 
                 });
 
                 if (!response.ok) {

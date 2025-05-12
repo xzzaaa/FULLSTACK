@@ -1,28 +1,26 @@
-// === Variables: Hacker/Dark Green Theme ===
-// === Variables: Hacker/Dark Green Theme ===
-$font-primary: 'Source Code Pro', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; // <<< THIS LINE DEFINES IT
+
+$font-primary: 'Source Code Pro', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; 
 $font-secondary: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-// ... other variables ...
 $font-secondary: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-$color-bg-deep: #0a0f18; // Very dark blue/black
-$color-bg-surface: #111827; // Dark gray/blue surface
-$color-bg-surface-alt: #1f2937; // Slightly lighter surface
-$color-border: #374151; // Muted border
+$color-bg-deep: #0a0f18; 
+$color-bg-surface: #111827;
+$color-bg-surface-alt: #1f2937; 
+$color-border: #374151;
 
-$color-text-primary: #e5e7eb; // Light gray for body text
-$color-text-secondary: #9ca3af; // Muted gray
-$color-text-heading: #f9fafb; // Brighter white/light gray for headings
+$color-text-primary: #e5e7eb; 
+$color-text-secondary: #9ca3af;
+$color-text-heading: #f9fafb;
 
-$color-accent-green: #34d399; // Vibrant Emerald/Green
-$color-accent-green-hover: #6ee7b7; // Lighter green for hover
-$color-accent-secondary: #6366f1; // Indigo for secondary actions/accents
+$color-accent-green: #34d399; 
+$color-accent-green-hover: #6ee7b7; 
+$color-accent-secondary: #6366f1; 
 $color-accent-secondary-hover: #818cf8;
 $color-text-muted:$color-accent-green;
 
 $color-success: $color-accent-green;
-$color-danger: #f87171; // Red 400
+$color-danger: #f87171; 
 
 $radius-base: 4px;
 $radius-lg: 6px;
@@ -38,7 +36,6 @@ $transition-base: all $transition-duration $transition-timing;
 $content-max-width: 800px;
 $spacing-unit: 1rem;
 
-// === Base & Reset ===
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 16px; }
 body {
@@ -52,7 +49,6 @@ body {
   overflow-x: hidden;
 }
 
-// === Layout ===
 .main-content, .post-container, .form-container > .login-container, .contactForm, .intro-page {
   max-width: $content-max-width;
   margin: $spacing-unit * 2.5 auto;
@@ -65,7 +61,6 @@ body {
   }
 }
 
-// === Typography ===
 h1, h2, h3, h4, h5, h6 {
   font-family: $font-primary;
   color: $color-text-heading;
@@ -78,14 +73,13 @@ h2 { font-size: 1.8rem; color: $color-accent-green; }
 h3 { font-size: 1.3rem; font-weight: 500; color: lighten($color-accent-green, 10%); }
 h4 { font-size: 1.1rem; font-weight: 500; color: $color-text-secondary; }
 
-p { margin-bottom: $spacing-unit * 1.2; color: $color-text-secondary; font-family: $font-secondary; } // Secondary font for paragraphs
+p { margin-bottom: $spacing-unit * 1.2; color: $color-text-secondary; font-family: $font-secondary; }
 a { color: $color-accent-green; text-decoration: none; transition: $transition-base; &:hover { color: $color-accent-green-hover; text-decoration: none; filter: brightness(1.1); } }
 strong { font-weight: 600; color: $color-text-heading; }
 small, .post-meta, .comment-time { font-size: 0.85em; color: $color-text-muted; display: block; font-family: $font-primary; }
 hr { border: 0; border-top: 1px dashed $color-border; margin: $spacing-unit * 2.5 0; opacity: 0.5; }
 img { max-width: 100%; height: auto; vertical-align: middle; border-radius: $radius-base; }
 
-// === Base Card Style ===
 %card {
   background-color: $color-bg-surface;
   border-radius: $radius-base;
@@ -96,7 +90,6 @@ img { max-width: 100%; height: auto; vertical-align: middle; border-radius: $rad
   box-shadow: $shadow-card;
 }
 
-// === Navigation ===
 nav {
   background-color: rgba($color-bg-deep, 0.8);
   backdrop-filter: blur(8px);
@@ -125,7 +118,6 @@ nav {
   ul { display: none; }
 }
 
-// === Buttons ===
 %btn-base { display: inline-flex; align-items: center; justify-content: center; padding: $spacing-unit*0.6 $spacing-unit*1.5; border-radius: $radius-base; font-weight: 500; font-size: 0.95rem; text-align: center; cursor: pointer; border: 1px solid $color-accent-green; transition: $transition-base; text-decoration: none; line-height: 1.4; gap: $spacing-unit * 0.4; letter-spacing: 0.5px; &:focus { outline: none; box-shadow: $shadow-glow-focus; } &:active { transform: scale(0.97); } }
 %btn-primary-green { @extend %btn-base; background-color: $color-accent-green; color: $color-bg-deep; border-color: $color-accent-green; &:hover { background-color: $color-accent-green-hover; border-color: $color-accent-green-hover; box-shadow: $shadow-glow-green; color: $color-bg-surface; } }
 %btn-secondary { @extend %btn-base; background-color: $color-bg-surface-alt; color: $color-text-primary; border-color: $color-border; &:hover { background-color: lighten($color-bg-surface-alt, 5%); border-color: lighten($color-border, 5%); } }
@@ -133,7 +125,6 @@ nav {
 %btn-link { @extend %btn-base; background: none; border: none; color: $color-accent-green; padding: 0; text-decoration: underline; font-weight: 400; &:hover { color: $color-accent-green-hover; } }
 %btn-danger-outline { @extend %btn-base; background: none; border: 1px solid $color-danger; color: $color-danger; &:hover { background-color: rgba($color-danger, 0.1); } }
 
-// Apply button styles
 .comment-btn { @extend %btn-primary-green; }
 .login-container button { @extend %btn-primary-green; width: 100%; margin-top: $spacing-unit * 1.5;}
 #submitButton input[type="submit"] { @extend %btn-primary-green; width: 100%; margin-top: $spacing-unit * 1.5; }
@@ -145,7 +136,6 @@ nav {
 a.read-more-link { @extend %btn-link; display: inline-block; margin-top: $spacing-unit * 1; font-size: 0.95em; font-weight: 500; letter-spacing: 0.3px; }
 
 
-// === Forms ===
 .form-container > .login-container, .contactForm form { @extend %card; padding: $spacing-unit * 2 $spacing-unit * 3; }
 .form-container, .contactForm { padding: 0; }
 .login-container, .contactForm form {
@@ -158,7 +148,6 @@ a.read-more-link { @extend %btn-link; display: inline-block; margin-top: $spacin
      .form-footer-links { margin-top: $spacing-unit*2; text-align: center; font-size: 0.9em; }
 }
 
-// === Blog Posts ===
 .post-container { background: none; border: none; box-shadow: none; padding: 0; margin-bottom: $spacing-unit * 2.5;
     .post-title { font-size: 1rem; color: $color-text-muted; text-transform: uppercase; letter-spacing: 1px; margin-bottom: $spacing-unit * 1; font-weight: 500; border-bottom: 1px solid $color-border; padding-bottom: $spacing-unit*0.5; }
     .blog-post { @extend %card; box-shadow: $shadow-card; }
@@ -184,7 +173,6 @@ a.read-more-link { @extend %btn-link; display: inline-block; margin-top: $spacin
 }
 
 
-// === Comments ===
 .comments-section { margin-top: $spacing-unit * 3; border-top: 1px solid $color-border; padding-top: $spacing-unit * 2.5; h3 { margin-bottom: $spacing-unit * 2; font-size: 1.5rem; color: $color-accent-green-hover; }
   .comment-box {
      @extend %card; box-shadow: none; border-left: 3px solid $color-border; transition: border-left-color 0.3s ease, background-color 0.3s ease; padding: $spacing-unit * 1.5 $spacing-unit * 1.8; margin-bottom: $spacing-unit * 1.5; background-color: $color-bg-surface; border: 1px solid $color-border;
@@ -202,7 +190,6 @@ a.read-more-link { @extend %btn-link; display: inline-block; margin-top: $spacin
   }
 }
 
-// --- Comment Form ---
 .comment-form-section { margin-top: $spacing-unit*2; border-top: 1px solid $color-border; padding-top: $spacing-unit*2.5; }
 .comment-form {
     h3 { font-size: 1.4rem; font-weight: 600; margin-bottom: $spacing-unit * 1.5; color: lighten($color-accent-green, 10%); }
@@ -210,7 +197,6 @@ a.read-more-link { @extend %btn-link; display: inline-block; margin-top: $spacin
     .reply-status { background-color: rgba($color-accent-secondary, 0.1); border-color: rgba($color-accent-secondary, 0.3); color: lighten($color-accent-secondary, 15%); strong { color: lighten($color-accent-secondary, 20%);} }
 }
 
-// --- Footer ---
 footer {
   text-align: center; padding: $spacing-unit * 3 $spacing-unit * 1.5; margin-top: $spacing-unit * 4;
   background-color: $color-bg-deep;
@@ -223,7 +209,6 @@ footer {
   .copyright { margin-top: $spacing-unit * 2.5; font-size: 0.8em; opacity: 0.6; }
 }
 
-// --- Toast ---
 #toast {
   position: fixed; bottom: 30px; top: auto; left: 50%; background: $color-bg-surface; color: $color-text-primary; padding: $spacing-unit $spacing-unit * 2; border-radius: $radius-base; box-shadow: $shadow-card; z-index: 2000; font-family: $font-primary; font-weight: 500; transition: opacity 0.3s ease, transform 0.3s ease; opacity: 0; transform: translate(-50%, 20px); pointer-events: none; border-left: 4px solid $color-success;
   &.show { display: block; opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
@@ -231,12 +216,10 @@ footer {
   &.error { border-left-color: $color-danger; background-color: lighten($color-danger, 5%); color: $color-text-heading; }
 }
 
-// --- Image Gallery & Preview ---
 .image-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: $spacing-unit * 0.8; margin: $spacing-unit * 1.8 0; }
 .image-preview-container { margin-top: $spacing-unit; display: flex; flex-wrap: wrap; gap: $spacing-unit*0.8; }
 .image-preview-item { max-width: 80px; max-height: 80px; border: 1px solid $color-border; padding: 2px; border-radius: $radius-base; img { max-width: 100%; max-height: 100%; display: block; object-fit: cover; border-radius: 2px; } }
 
-// === Media Queries ===
 @media (max-width: 768px) {
   body { font-size: 15px; padding-top: 60px; }
   .main-content, .post-container, .form-container > .login-container, .contactForm, .intro-page { padding: 0 $spacing-unit; margin-top: $spacing-unit*1.5; margin-bottom: $spacing-unit*1.5; }
@@ -247,10 +230,8 @@ footer {
   footer { padding: $spacing-unit*2 $spacing-unit*0.8; margin-top: $spacing-unit*2.5; }
 }
 
-// === Misc/Helpers ===
 .sr-only { border: 0 !important; clip: rect(1px, 1px, 1px, 1px) !important; -webkit-clip-path: inset(50%) !important; clip-path: inset(50%) !important; height: 1px !important; margin: -1px !important; overflow: hidden !important; padding: 0 !important; position: absolute !important; width: 1px !important; white-space: nowrap !important; }
 #loading-indicator { text-align: center; padding: 20px; display: none; font-style: normal; color: $color-text-muted; font-size: 1rem; font-weight: 500; }
 
-// === Basic Animations ===
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 .blog-post, .comment-box { animation: fadeIn 0.4s $transition-timing forwards; opacity: 0; animation-delay: calc(var(--animation-order, 0) * 50ms); }

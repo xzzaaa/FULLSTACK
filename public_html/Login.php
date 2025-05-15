@@ -42,7 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="password" id="password" name="password" placeholder="Lösenord" required>
                 <button type="submit">Logga in</button>
             </form>
-            <h3>Registrera dig <a href="register.php">Sign up</a></h3>
+            <h3>Har du inte ett konto än?: <form action="register.php">
+    <input type="submit" value="Sign up" /></form></h3>
         </div>
     </div>
     <p id="response"></p>

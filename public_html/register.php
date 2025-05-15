@@ -61,7 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     
-    <h3>Har du redan ett konto?<a href="Login.php">Logga in</a></h3>
+    <h3>Har du redan ett konto?:<form action="Login.php">
+    <input type="submit" value="Log in" /></form></h3>
     </div>
     </div>
     <p id="response"></p>
